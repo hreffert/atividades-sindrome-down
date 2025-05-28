@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florescer da Mente Interativo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F5F1; /* Warm Off-White */
+            color: #3D405B; /* Dark Slate Blue/Gray */
+        }
+        .nav-button {
+            background-color: #81B29A; /* Muted Sage Green */
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .nav-button:hover, .nav-button.active {
+            background-color: #E07A5F; /* Terracotta/Coral */
+        }
+        .category-button {
+            background-color: #F2CC8F; /* Soft Gold/Pale Orange */
+            color: #3D405B;
+            transition: background-color 0.3s ease;
+        }
+        .category-button:hover {
+            background-color: #E07A5F;
+            color: white;
+        }
+        .activity-card {
+            background-color: white;
+            border-left: 5px solid #81B29A;
+        }
+        .activity-detail-card {
+            background-color: #FFFFFF;
+            border: 1px solid #D2B48C; /* Tan */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .search-input {
+            border: 2px solid #D2B48C;
+        }
+        .search-input:focus {
+            border-color: #81B29A;
+            outline: none;
+        }
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F8F5F1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D2B48C;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B8860B; /* Dark Goldenrod */
+        }
+        /* Ensure long words in activity steps break properly */
+        .activity-step, .activity-tip, .activity-material-item {
+            word-break: break-word;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="antialiased leading-relaxed">
+
+    <header class="bg-[#81B29A] text-white p-6 shadow-md">
+        <div class="container mx-auto max-w-6xl">
+            <h1 class="text-3xl md:text-4xl font-bold">🌸 Florescer da Mente Interativo</h1>
+            <p class="mt-1 text-lg">50 Atividades Cognitivas para Crianças com Síndrome de Down</p>
+        </div>
+    </header>
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto max-w-6xl flex flex-wrap justify-center md:justify-start space-x-0 md:space-x-2 py-3 px-4">
+            <button id="nav-intro" class="nav-button text-sm md:text-base font-semibold py-2 px-3 md:px-4 rounded-md mb-2 md:mb-0 w-full md:w-auto">📖 Introdução</button>
+            <button id="nav-linguagem" class="nav-button text-sm md:text-base font-semibold py-2 px-3 md:px-4 rounded-md mb-2 md:mb-0 w-full md:w-auto">🗣️ Atividades de Linguagem</button>
+            <button id="nav-matematica" class="nav-button text-sm md:text-base font-semibold py-2 px-3 md:px-4 rounded-md mb-2 md:mb-0 w-full md:w-auto">🧮 Atividades de Matemática</button>
+        </div>
+        <div class="container mx-auto max-w-6xl px-4 pb-3">
+            <input type="text" id="search-input" placeholder="🔎 Buscar atividades por nome ou palavra-chave..." class="search-input p-2.5 rounded-md w-full text-sm md:text-base focus:ring-2 focus:ring-[#81B29A]">
+        </div>
+    </nav>
+
+    <main class="container mx-auto max-w-6xl p-4 md:p-6">
+        <section id="intro-section" class="content-section space-y-6"></section>
+        <section id="linguagem-section" class="content-section hidden space-y-6"></section>
+        <section id="matematica-section" class="content-section hidden space-y-6"></section>
+        <section id="search-results-section" class="content-section hidden space-y-6">
+            <h2 class="text-2xl font-semibold text-[#81B29A]">Resultados da Busca</h2>
+            <div id="search-results-content" class="space-y-4"></div>
+        </section>
+        <div id="activity-detail-view" class="hidden activity-detail-card p-6 rounded-lg mt-6"></div>
+    </main>
+
+    <footer class="text-center p-6 mt-10 border-t border-[#D2B48C]">
+        <p class="text-sm text-[#3D405B]">&copy; 2024 Florescer da Mente Interativo. Baseado no e-book original.</p>
+    </footer>
+
+    <script>
+        const allActivities = [
+            {
+                id: 'ling1', name: 'Caixa Surpresa dos Tesouros', area: 'linguagem', category: 'Expandindo o Vocabulário',
+                objective: 'Desenvolver o vocabulário receptivo e expressivo de substantivos (nomes de objetos comuns) e, secundariamente, a atenção conjunta.',
+                materials: ['Uma caixa decorada (pode ser de sapatos)', 'Diversos objetos pequenos e familiares à criança (ex: carrinho, bola, colher, copo, ursinho, pente, chave, livro pequeno), ou figuras nítidas desses objetos coladas em cartões.'],
+                steps: [
+                    'Sente-se com a criança em um local tranquilo. Apresente a "Caixa Surpresa dos Tesouros" de forma animada.',
+                    'Diga: "Vamos ver o que tem dentro da caixa mágica!".',
+                    'Retire um objeto (ou figura) por vez da caixa.',
+                    'Mostre o objeto para a criança, nomeie-o claramente e de forma enfática: "Olha, um <strong>carro</strong>!". Espere um momento, mantendo contato visual e o foco no objeto.',
+                    'Incentive a criança a pegar o objeto, explorá-lo e, se possível, tentar repetir o nome ou fazer um som associado (ex: "brummm" para o carro).',
+                    'Se estiver trabalhando o vocabulário receptivo, após nomear alguns objetos, coloque dois ou três deles à vista e peça: "Me dá o <strong>carro</strong>" ou "Onde está a <strong>bola</strong>?".',
+                    'Varie os objetos em diferentes sessões para expandir o vocabulário.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com apenas 2-3 objetos bem distintos. Use objetos reais em vez de figuras, se a criança tiver dificuldade com representações.',
+                    '<strong>Desafiar:</strong> Aumente o número de objetos. Peça para a criança nomear o objeto antes de você. Introduza categorias (ex: "Vamos achar todos os brinquedos?").',
+                    '<strong>CSA:</strong> Se a criança utiliza CSA, tenha os símbolos correspondentes aos objetos disponíveis. Ao nomear o objeto, aponte também para o símbolo. Incentive a criança a usar o símbolo para pedir ou nomear.',
+                    '<strong>Interesse:</strong> Use objetos que sejam de grande interesse para a criança para aumentar a motivação.'
+                ],
+                science_snippet: 'Esta atividade se baseia no princípio de que o aprendizado de vocabulário é facilitado pelo uso de objetos concretos e pela interação direta, como apontado em diretrizes de estimulação precoce [10] e estudos sobre desenvolvimento lexical.[9] A atenção conjunta, estimulada ao focar no objeto junto com a criança, é crucial para a aquisição de novas palavras.[23]'
+            },
+            {
+                id: 'ling2', name: 'O que Estou Fazendo? (Verbos em Ação)', area: 'linguagem', category: 'Expandindo o Vocabulário',
+                objective: 'Desenvolver o vocabulário expressivo e receptivo de verbos de ação comuns, e estimular a imitação motora e vocal.',
+                materials: ['Nenhum material específico, ou objetos que facilitem a ação (ex: bola para "jogar", copo para "beber", livro para "ler").'],
+                steps: [
+                    'Escolha um verbo de ação simples (ex: comer, beber, dormir, pular, correr, jogar, ler, dar tchau).',
+                    'Realize a ação de forma clara e exagerada, enquanto verbaliza o verbo: "Eu estou <strong>comendo</strong>!" (faça a mímica de comer).',
+                    'Convide a criança a imitar a ação: "Agora você! Vamos <strong>comer</strong>!".',
+                    'Se a criança imitar a ação, reforce positivamente. Incentive-a a verbalizar o verbo ou um som associado.',
+                    'Para o vocabulário receptivo, diga o verbo e peça para a criança realizar a ação: "Mostre como você <strong>pula</strong>!" ou "Vamos <strong>dar tchau</strong>?".',
+                    'Use diferentes verbos em contextos variados ao longo do dia.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com verbos que envolvam movimentos corporais amplos e que sejam muito familiares à criança. Use gestos naturais associados à ação.',
+                    '<strong>Desafiar:</strong> Combine dois verbos em uma instrução (ex: "Pegue a bola e <strong>jogue</strong>"). Use os verbos em frases curtas (ex: "O menino está <strong>correndo</strong>").',
+                    '<strong>CSA:</strong> Utilize símbolos de CSA para os verbos. Ao realizar a ação e verbalizar, aponte para o símbolo correspondente.',
+                    '<strong>Música:</strong> Cante músicas que envolvam ações e incentive a criança a realizar os movimentos e cantar junto (ex: "Cabeça, Ombro, Joelho e Pé").'
+                ],
+                science_snippet: 'A imitação de produções orais e gestuais é uma estratégia fundamental para o desenvolvimento da linguagem em crianças com síndrome de Down.[9] Associar a palavra (verbo) à ação concreta e à imitação reforça a aprendizagem e a compreensão do significado.[10]'
+            },
+            {
+                id: 'ling3', name: 'Descrevendo o Mundo (Adjetivos)', area: 'linguagem', category: 'Expandindo o Vocabulário',
+                objective: 'Introduzir e expandir o vocabulário receptivo e expressivo de adjetivos básicos (cores, tamanhos, texturas, opostos simples).',
+                materials: ['Objetos variados com características distintas (ex: bola grande/pequena, bloco vermelho/azul, ursinho macio/livro duro, copo cheio/vazio)', 'Figuras coloridas.'],
+                steps: [
+                    'Escolha um par de adjetivos opostos (ex: grande/pequeno).',
+                    'Apresente dois objetos que exemplifiquem claramente esses opostos (ex: uma bola de basquete e uma bolinha de gude).',
+                    'Mostre o primeiro objeto e diga: "Olha, uma bola <strong>grande</strong>!". Deixe a criança explorar.',
+                    'Mostre o segundo objeto: "E esta é uma bola <strong>pequena</strong>!".',
+                    'Coloque os dois objetos juntos e peça para a criança apontar ou pegar: "Me mostra a bola <strong>grande</strong>." ou "Onde está a bola <strong>pequena</strong>?".',
+                    'Incentive a criança a tentar usar o adjetivo para descrever os objetos.',
+                    'Repita com outros pares de adjetivos (ex: vermelho/azul, macio/duro, feliz/triste – usando figuras de rostos).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com um único adjetivo por vez (ex: apenas "grande") e depois introduza o oposto. Use contrastes bem evidentes.',
+                    '<strong>Desafiar:</strong> Use três ou mais objetos para escolher. Peça para a criança encontrar outros objetos no ambiente que tenham a mesma característica (ex: "O que mais é <strong>vermelho</strong> aqui?").',
+                    '<strong>CSA:</strong> Tenha símbolos para os adjetivos. Ao descrever, aponte para o símbolo.',
+                    '<strong>Sensorial:</strong> Explore texturas (macio, áspero, liso) com materiais que a criança possa tocar.'
+                ],
+                science_snippet: 'O aprendizado de adjetivos enriquece a capacidade descritiva e a compreensão de nuances da linguagem. Utilizar objetos concretos e contrastes visuais/táteis apoia o processamento da informação, uma estratégia eficaz para crianças com SD.[5, 15]'
+            },
+            {
+                id: 'ling4', name: 'Jogo da Memória de Pares Semânticos', area: 'linguagem', category: 'Expandindo o Vocabulário',
+                objective: 'Desenvolver o vocabulário receptivo, a categorização semântica (agrupar palavras por significado relacionado) e a memória de trabalho visual.',
+                materials: ['Cartões com figuras de objetos que formam pares semânticos (ex: meia/sapato, colher/prato, pente/cabelo, cachorro/osso, chave/porta, lápis/papel). Faça dois cartões de cada figura.'],
+                steps: [
+                    'Comece com um número pequeno de pares (ex: 3 pares, totalizando 6 cartões).',
+                    'Mostre os pares para a criança, nomeando cada figura e explicando a relação (ex: "A <strong>meia</strong> vai com o <strong>sapato</strong>.").',
+                    'Vire os cartões com as figuras para baixo, embaralhados.',
+                    'Peça para a criança virar dois cartões.',
+                    'Se formar um par semântico, a criança fica com os cartões. Nomeie novamente as figuras e a relação.',
+                    'Se não formar um par, vire os cartões novamente para baixo e passe a vez (se estiver jogando com mais alguém) ou tente novamente.',
+                    'O jogo continua até todos os pares serem formados.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use menos pares. Deixe os cartões virados para cima e peça para a criança apenas juntar os pares (jogo de correspondência).',
+                    '<strong>Desafiar:</strong> Aumente o número de pares. Use categorias mais abstratas (ex: animais que voam, frutas).',
+                    '<strong>Verbalização:</strong> Incentive a criança a nomear as figuras ao virar os cartões e a tentar explicar por que formam um par.'
+                ],
+                science_snippet: 'Jogos de memória são excelentes para exercitar a memória de trabalho visual, uma área de relativa força em crianças com SD.[2] A categorização semântica ajuda a organizar o vocabulário e a compreender as relações entre as palavras, aprofundando o conhecimento lexical.[15]'
+            },
+            {
+                id: 'ling5', name: 'Meu Primeiro Dicionário Visual', area: 'linguagem', category: 'Expandindo o Vocabulário',
+                objective: 'Consolidar o vocabulário receptivo e expressivo, associar a imagem à palavra escrita (leitura global inicial) e estimular o interesse por livros.',
+                materials: ['Um caderno ou álbum pequeno', 'Figuras de objetos, animais, alimentos, pessoas familiares (recortes de revistas, fotos ou desenhos)', 'Cola', 'Caneta.'],
+                steps: [
+                    'Junto com a criança, selecionem figuras que sejam significativas para ela.',
+                    'Colem uma figura por página no caderno/álbum.',
+                    'Embaixo de cada figura, escreva o nome do objeto/animal/pessoa em letra de forma maiúscula e legível.',
+                    '"Leiam" o dicionário juntos regularmente. Aponte para a figura, diga o nome, e depois aponte para a palavra escrita, lendo-a em voz alta.',
+                    'Incentive a criança a apontar para a figura quando você disser o nome, e mais tarde, a tentar "ler" a palavra escrita (reconhecimento global).'
+                ],
+                tips: [
+                    '<strong>Personalização:</strong> Use fotos da própria criança, da família, de seus brinquedos e alimentos favoritos para tornar o dicionário altamente pessoal e motivador.',
+                    '<strong>Temático:</strong> Crie pequenos dicionários temáticos (ex: "Animais", "Comidas", "Brinquedos").',
+                    '<strong>Interativo:</strong> Deixe espaços para a criança desenhar ao lado da figura ou tentar copiar a palavra.',
+                    '<strong>CSA:</strong> Se a criança usa CSA, inclua o símbolo correspondente ao lado da figura e da palavra escrita.'
+                ],
+                science_snippet: 'A associação entre imagem e palavra escrita é um dos primeiros passos para a leitura, especialmente utilizando a estratégia de leitura global, que se apoia na forte capacidade de processamento visual das crianças com SD.[4, 26] Criar materiais personalizados aumenta o engajamento e a significância da aprendizagem.[1]'
+            },
+            {
+                id: 'ling6', name: 'Siga o Mestre Colorido', area: 'linguagem', category: 'Aprimorando a Compreensão Oral',
+                objective: 'Desenvolver a compreensão de instruções simples envolvendo cores e nomes de objetos.',
+                materials: ['Diversos objetos de cores variadas (ex: blocos de montar, carrinhos, bolas, lápis de cor)', 'Um cesto ou caixa.'],
+                steps: [
+                    'Espalhe os objetos coloridos à frente da criança.',
+                    'Dê uma instrução simples, como: "Pegue o bloco <strong>vermelho</strong>".',
+                    'Espere a criança processar e realizar a ação. Se necessário, aponte para o objeto nomeado ou dê uma pista visual.',
+                    'Quando a criança pegar o objeto correto, peça: "Coloque o bloco <strong>vermelho</strong> no cesto".',
+                    'Varie as instruções, usando diferentes objetos e cores: "Me dá a bola <strong>azul</strong>", "Guarde o carrinho <strong>amarelo</strong>".',
+                    'Comece com instruções de um comando e, gradualmente, introduza dois comandos se a criança demonstrar facilidade (ex: "Pegue o lápis <strong>verde</strong> e coloque na caixa").'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use apenas duas cores de cada vez. Dê o comando e aponte para o objeto.',
+                    '<strong>Desafiar:</strong> Aumente o número de cores e objetos. Use instruções mais complexas, como "Pegue o bloco vermelho e coloque em cima da mesa". Introduza outros atributos, como tamanho ("Pegue o bloco vermelho grande").',
+                    '<strong>Movimento:</strong> Incorpore movimento, como "Leve a bola azul até a porta".'
+                ],
+                science_snippet: 'A compreensão de ordens simples é uma habilidade linguística fundamental trabalhada na estimulação precoce.[10] Utilizar objetos concretos e instruções claras e diretas, com apoio visual se necessário, atende às necessidades de aprendizagem de crianças com SD.[14]'
+            },
+            {
+                id: 'ling7', name: 'Pequenas Missões Divertidas', area: 'linguagem', category: 'Aprimorando a Compreensão Oral',
+                objective: 'Aprimorar a compreensão de instruções com duas ou três etapas sequenciais.',
+                materials: ['Objetos do cotidiano da criança (brinquedos, roupas, utensílios).'],
+                steps: [
+                    'Crie "missões" curtas e divertidas para a criança.',
+                    'Comece com instruções de duas etapas. Exemplo: "Pegue seu <strong>ursinho</strong> e coloque na <strong>cama</strong>". Verbalize de forma clara e pausada.',
+                    'Observe se a criança consegue lembrar e executar as duas partes da instrução.',
+                    'Se necessário, repita a instrução ou execute a primeira parte com ela e depois peça a segunda.',
+                    'Outros exemplos: "Pegue a <strong>colher</strong> e coloque na <strong>gaveta</strong>", "Calce a <strong>meia</strong> e depois o <strong>tênis</strong>".',
+                    'À medida que a criança progride, tente instruções com três etapas simples: "Pegue o <strong>livro azul</strong>, coloque na <strong>estante</strong> e depois me dê um <strong>beijo</strong>".'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use apenas uma etapa por vez. Use gestos para apoiar cada parte da instrução.',
+                    '<strong>Visualizar:</strong> Crie cartões com desenhos representando cada etapa da missão.',
+                    '<strong>Desafiar:</strong> Aumente a complexidade das ações ou o número de etapas (com moderação).',
+                    '<strong>Rotina:</strong> Integre essas "missões" nas rotinas diárias (guardar brinquedos, ajudar a pôr a mesa).'
+                ],
+                science_snippet: 'Esta atividade trabalha a memória de trabalho verbal e a capacidade de sequenciamento, áreas que podem ser desafiadoras para crianças com SD.[2] Dividir tarefas complexas em passos menores e usar linguagem clara são estratégias eficazes.[10, 17]'
+            },
+            {
+                id: 'ling8', name: 'Onde Está? (Preposições)', area: 'linguagem', category: 'Aprimorando a Compreensão Oral',
+                objective: 'Desenvolver a compreensão de noções espaciais básicas expressas por preposições (em cima, embaixo, dentro, fora, ao lado).',
+                materials: ['Um brinquedo pequeno (ex: um boneco ou animal de plástico)', 'Um objeto maior com o qual ele possa interagir (ex: uma caixa, um copo, um livro).'],
+                steps: [
+                    'Coloque o objeto maior (ex: a caixa) à frente da criança.',
+                    'Pegue o brinquedo pequeno (ex: o boneco) e demonstre a posição enquanto verbaliza: "O boneco está <strong>dentro</strong> da caixa". Coloque o boneco dentro da caixa.',
+                    'Retire o boneco e peça para a criança: "Coloque o boneco <strong>dentro</strong> da caixa".',
+                    'Repita com outras preposições:',
+                    '  - "O boneco está <strong>em cima</strong> do livro."',
+                    '  - "O boneco está <strong>embaixo</strong> da cadeira."',
+                    '  - "O boneco está <strong>fora</strong> do copo."',
+                    '  - "O boneco está <strong>ao lado</strong> da bola."',
+                    'Após a criança demonstrar compreensão ao executar as ações, inverta o papel: coloque o boneco em uma posição e pergunte "Onde está o boneco?". Incentive-a a usar a preposição na resposta, se possível.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Trabalhe uma preposição por vez até que seja bem compreendida. Use gestos amplos para indicar a posição.',
+                    '<strong>Desafiar:</strong> Use duas preposições em uma instrução (ex: "Coloque o boneco dentro da caixa e em cima do pano"). Peça para a criança descrever onde outros objetos estão no ambiente.',
+                    '<strong>Corpo:</strong> Use o próprio corpo da criança: "Fique <strong>embaixo</strong> da mesa", "Sente <strong>ao lado</strong> da mamãe".'
+                ],
+                science_snippet: 'A compreensão de relações espaciais é fundamental para a organização do pensamento e para a interação com o ambiente. Atividades concretas e manipulativas facilitam a aprendizagem desses conceitos abstratos.[13, 15]'
+            },
+            {
+                id: 'ling9', name: 'Histórias Curtas com Perguntas', area: 'linguagem', category: 'Aprimorando a Compreensão Oral',
+                objective: 'Desenvolver a compreensão de narrativas simples e a capacidade de responder a perguntas básicas sobre a história (Quem? O quê? Onde? Quando? Por quê?).',
+                materials: ['Livros com histórias curtas, ilustrações grandes e claras, ou crie suas próprias mini-histórias com 3-4 frases.', 'Figuras ou fantoches para representar os personagens podem ajudar.'],
+                steps: [
+                    'Escolha uma história apropriada para a idade e nível de compreensão da criança.',
+                    'Leia a história de forma expressiva, apontando para as ilustrações.',
+                    'Faça pausas estratégicas para fazer perguntas simples sobre o que acabou de ser lido.',
+                    '  - Exemplo: "O cachorrinho Lupi foi ao parque." (Pausa) "Quem foi ao parque?" (Lupi/O cachorrinho). "Onde Lupi foi?" (Ao parque).',
+                    'Continue a história, fazendo mais perguntas ao longo do caminho ou no final.',
+                    'Incentive respostas verbais, com gestos ou apontando para as figuras no livro.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use histórias muito curtas (2-3 frases). Faça perguntas com opções de resposta (ex: "Lupi foi ao parque ou à loja?"). Use apenas perguntas de "Quem?" e "O quê?" inicialmente.',
+                    '<strong>Desafiar:</strong> Use histórias um pouco mais longas. Faça perguntas de "Por quê?" e "Como?". Peça para a criança recontar uma parte da história.',
+                    '<strong>Dramatização:</strong> Após a leitura, dramatizem a história com brinquedos ou fantoches.'
+                ],
+                science_snippet: 'A compreensão de narrativas é uma habilidade linguística complexa que envolve vocabulário, sintaxe e memória.[24] O uso de apoio visual (ilustrações) e a formulação de perguntas diretas facilitam a compreensão para crianças com SD.[15]'
+            },
+            {
+                id: 'ling10', name: 'Telefone sem Fio Visual', area: 'linguagem', category: 'Aprimorando a Compreensão Oral',
+                objective: 'Aprimorar a compreensão e a retenção de mensagens curtas, e estimular a memória auditiva de curto prazo com apoio visual.',
+                materials: ['Cartões com desenhos simples representando ações ou objetos (ex: um menino comendo uma maçã, um gato dormindo, uma bola vermelha).', 'Dois "telefones" de brinquedo (opcional).'],
+                steps: [
+                    'Sente-se com a criança e, se houver um terceiro participante (outro adulto ou criança), melhor.',
+                    'Mostre um cartão com uma figura para o primeiro participante (sem que a criança veja, se for ela a receptora final).',
+                    'O primeiro participante "cochicha" uma frase curta descrevendo a figura no "ouvido" do próximo (ou diretamente para a criança, se forem apenas dois). Ex: "O menino come maçã".',
+                    'A criança (ou o próximo da fila) tenta repetir a frase.',
+                    'Compare a frase dita com a figura original para ver se a mensagem foi transmitida corretamente.',
+                    'Troquem os papéis.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use frases de duas palavras (ex: "Gato dorme"). Mostre a figura para a criança enquanto você diz a frase, e peça para ela repetir olhando para a figura.',
+                    '<strong>Desafiar:</strong> Aumente o comprimento da frase. Use frases com mais detalhes. Faça o jogo sem mostrar a figura até o final.',
+                    '<strong>Foco na Compreensão:</strong> Em vez de repetir, peça para a criança realizar a ação descrita na frase (ex: se a frase é "Pegue a bola azul", ela deve pegar a bola azul).'
+                ],
+                science_snippet: 'A memória auditiva de curto prazo pode ser um desafio para crianças com SD.[2] O apoio visual da figura ajuda a ancorar a informação verbal, facilitando a retenção e a compreensão da mensagem. A repetição em um contexto lúdico também é benéfica.'
+            },
+            {
+                id: 'ling11', name: 'Show de Fantoches', area: 'linguagem', category: 'Estimulando a Expressão Oral e a Narrativa',
+                objective: 'Estimular a expressão oral espontânea, a criação de diálogos simples e a intenção comunicativa.',
+                materials: ['Fantoches de mão ou de dedo (podem ser comprados ou feitos com meias, sacos de papel, etc.)', 'Um pequeno palco improvisado (opcional, pode ser atrás de um sofá).'],
+                steps: [
+                    'Escolha um ou dois fantoches com a criança.',
+                    'Comece a brincadeira, dando voz a um fantoche. Faça o fantoche cumprimentar o fantoche da criança ou a própria criança.',
+                    'Incentive a criança a fazer seu fantoche responder. Faça perguntas simples através do seu fantoche (ex: "Olá! Qual é o seu nome?", "Você quer brincar?").',
+                    'Crie pequenas cenas ou situações (ex: o fantoche está com fome, o fantoche quer passear).',
+                    'Modele frases simples e incentive a criança a usar seus fantoches para se expressar.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> A criança pode apenas movimentar o fantoche enquanto você faz a maior parte da verbalização, atribuindo falas ao fantoche dela. Use sons e exclamações.',
+                    '<strong>Desafiar:</strong> Incentive a criança a criar uma pequena história com os fantoches. Introduza mais personagens.',
+                    '<strong>CSA:</strong> A criança pode usar seu sistema de CSA para "falar" pelo fantoche.',
+                    '<strong>Observação:</strong> Se a criança estiver relutante em falar, comece apenas com a manipulação dos fantoches e vá introduzindo a fala gradualmente.'
+                ],
+                science_snippet: 'O uso de fantoches pode diminuir a inibição e facilitar a expressão oral, pois a criança "fala através" do personagem.[9] A atividade promove a intenção comunicativa e a prática de turnos de conversação em um ambiente lúdico.[9]'
+            },
+            {
+                id: 'ling12', name: 'O Livro da Nossa Semana', area: 'linguagem', category: 'Estimulando a Expressão Oral e a Narrativa',
+                objective: 'Desenvolver a narrativa de eventos cotidianos, a organização temporal básica (sequência de acontecimentos) e o vocabulário relacionado à rotina.',
+                materials: ['Um caderno ou algumas folhas de papel presas', 'Lápis de cor, canetinhas, cola, tesoura (com supervisão)', 'Fotos ou figuras que representem atividades da semana.'],
+                steps: [
+                    'Ao final de cada dia, ou uma vez por semana (ex: na sexta-feira ou domingo), sente-se com a criança para registrar um evento importante ou divertido que aconteceu.',
+                    'Converse sobre o evento: "O que fizemos de legal hoje/esta semana?". Ajude a criança a lembrar.',
+                    'Peça para ela desenhar o evento. Enquanto ela desenha, converse sobre os detalhes.',
+                    'Ajude-a a escrever uma frase simples sobre o desenho (ou você escreve o que ela ditar). Ex: "EU FUI AO PARQUE COM A MAMÃE."',
+                    'Se tiver fotos do evento, cole-as no "livro".',
+                    'Ao longo do tempo, o livro se tornará um registro das memórias e um estímulo para recontar as histórias.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Foque em um único evento por vez. Use mais fotos e menos escrita. A criança pode apenas ditar e você escreve.',
+                    '<strong>Desafiar:</strong> Incentive a criança a escrever mais detalhes. Peça para ela ordenar 2-3 eventos da semana em sequência.',
+                    '<strong>Oral:</strong> Antes de desenhar/escrever, peça para a criança contar oralmente sobre o evento.'
+                ],
+                science_snippet: 'Recontar eventos pessoais ajuda a desenvolver habilidades narrativas e a organizar experiências.[24] O apoio visual de desenhos e fotos facilita a recordação e a expressão.[16] Esta atividade também promove a noção de sequência temporal.'
+            },
+            {
+                id: 'ling13', name: 'Desenhando e Contando', area: 'linguagem', category: 'Estimulando a Expressão Oral e a Narrativa',
+                objective: 'Estimular a narrativa oral a partir de uma produção visual própria e expandir o vocabulário expressivo.',
+                materials: ['Papel', 'Lápis de cor', 'Giz de cera', 'Canetinhas.'],
+                steps: [
+                    'Convide a criança para fazer um desenho livre sobre um tema (ex: "Sua família", "Seu brinquedo favorito", "Um dia feliz") ou sem tema específico.',
+                    'Enquanto ela desenha, mostre interesse, faça comentários positivos e perguntas abertas sobre o que ela está criando (ex: "Que legal! O que é isso?", "Quais cores você está usando?").',
+                    'Quando o desenho estiver pronto, peça para a criança "contar sobre o desenho".',
+                    'Ouça atentamente, incentive-a a dar detalhes. Se ela tiver dificuldade, faça perguntas guia: "Quem está no desenho?", "O que eles estão fazendo?", "Onde eles estão?".',
+                    'Valorize qualquer tentativa de comunicação, seja verbal, gestual ou com apoio de CSA.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> A criança pode apenas apontar para partes do desenho e você nomeia ou descreve, incentivando-a a repetir ou complementar.',
+                    '<strong>Desafiar:</strong> Peça para ela criar uma pequena história baseada no desenho. Grave a "história" dela e ouçam juntos depois.',
+                    '<strong>Escrita:</strong> Se a criança já tiver alguma habilidade de escrita, incentive-a a escrever palavras ou uma frase sobre o desenho.'
+                ],
+                science_snippet: 'O desenho é uma forma de expressão e representação do pensamento. Convidar a criança a falar sobre sua produção artística é uma maneira natural de estimular a linguagem expressiva e a narrativa.[15, 24] A mediação do adulto com perguntas e incentivos é fundamental.'
+            },
+            {
+                id: 'ling14', name: 'Quem Sou Eu? (Adivinhas)', area: 'linguagem', category: 'Estimulando a Expressão Oral e a Narrativa',
+                objective: 'Desenvolver a linguagem descritiva (habilidade de dar características), o vocabulário expressivo e a capacidade de fazer inferências simples.',
+                materials: ['Figuras de animais, objetos ou personagens conhecidos pela criança, ou os próprios objetos.'],
+                steps: [
+                    '<strong>Adulto dá as pistas:</strong> Escolha uma figura (sem mostrar para a criança) ou um objeto escondido.',
+                    'Dê pistas sobre o item, uma de cada vez. Ex: (para "cachorro") "Eu sou um animal.", "Eu faço \'au au\'.", "Eu gosto de ossos.", "Quem sou eu?".',
+                    'Incentive a criança a adivinhar.',
+                    '<strong>Criança dá as pistas (quando mais avançada):</strong> Depois que a criança entender o jogo, incentive-a a escolher uma figura/objeto e dar pistas para você adivinhar. Ajude-a a pensar em características (cor, tamanho, som que faz, o que come, onde vive, etc.).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use objetos bem familiares. Dê pistas muito óbvias. Mostre 2-3 figuras e peça para ela adivinhar qual você está descrevendo.',
+                    '<strong>Desafiar:</strong> Use categorias mais amplas. Peça para a criança dar 3 pistas antes de você tentar adivinhar.',
+                    '<strong>Visual:</strong> Tenha as figuras visíveis para a criança escolher qual descrever, ou para ajudar na adivinhação.'
+                ],
+                science_snippet: 'Jogos de adivinhação estimulam o raciocínio, a memória e o uso funcional do vocabulário.[15] A necessidade de descrever ou compreender descrições impulsiona o desenvolvimento da linguagem expressiva e receptiva.'
+            },
+            {
+                id: 'ling15', name: 'Montando Histórias com Imagens', area: 'linguagem', category: 'Estimulando a Expressão Oral e a Narrativa',
+                objective: 'Desenvolver a compreensão e produção de narrativas curtas com apoio visual, a noção de sequência lógica e a estrutura frasal simples.',
+                materials: ['Conjuntos de 3 a 5 cartões com imagens que representem uma sequência lógica de uma história simples (ex: 1. Menina com sementes e vaso; 2. Menina plantando as sementes; 3. Menina regando; 4. Flor crescendo no vaso). Podem ser desenhados, impressos da internet ou de jogos educativos.'],
+                steps: [
+                    'Apresente os cartões da sequência embaralhados para a criança.',
+                    'Peça para ela observar as imagens e tentar colocá-las na ordem em que a história acontece. Ajude se necessário, conversando sobre o que acontece em cada cena.',
+                    'Depois que os cartões estiverem em ordem, peça para a criança "contar a história" olhando para as imagens.',
+                    'Incentive-a a usar frases simples para descrever cada cartão. Ex: "A menina pegou a semente.", "A menina plantou.", "A menina jogou água.", "A flor cresceu.". ',
+                    'Modele as frases se necessário e incentive a repetição.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com sequências de apenas 2 ou 3 cartões. Use histórias muito familiares ou baseadas na rotina da criança.',
+                    '<strong>Desafiar:</strong> Use sequências mais longas ou com mais detalhes. Peça para a criança criar um final diferente para a história.',
+                    '<strong>Escrita:</strong> Se a criança estiver aprendendo a escrever, peça para ela escrever uma palavra-chave ou uma frase curta para cada imagem.'
+                ],
+                science_snippet: 'O uso de figuras para apoiar a narrativa favorece a produção de enunciados mais longos e organizados em crianças com SD.[24] Esta atividade trabalha a coesão e coerência narrativa de forma visual e concreta.[16]'
+            },
+            {
+                id: 'ling16', name: 'Caça aos Sons Iniciais', area: 'linguagem', category: 'Desenvolvendo a Consciência Fonológica',
+                objective: 'Desenvolver a consciência fonológica, especificamente a habilidade de identificar o som inicial de palavras (aliteração).',
+                materials: ['Figuras de objetos cujos nomes comecem com sons fáceis de identificar e contrastar (ex: <strong>B</strong>ola, <strong>B</strong>oneca, <strong>P</strong>ato, <strong>P</strong>anela, <strong>M</strong>acaco, <strong>M</strong>ala).', 'Uma caixa ou saco.'],
+                steps: [
+                    'Coloque algumas figuras na caixa/saco.',
+                    'Retire uma figura, por exemplo, "Bola". Diga o nome da palavra enfatizando o som inicial: "<strong>B</strong>...ola".',
+                    'Peça para a criança repetir o som inicial: "/b/".',
+                    'Mostre outra figura, por exemplo, "Pato". Diga: "<strong>P</strong>...ato. Começa com /p/".',
+                    'Depois, mostre duas figuras (ex: Bola e Pato) e diga: "Qual dessas começa com o som /b/?" ou "Vamos achar outra figura que comece com o mesmo som da <strong>B</strong>ola?".',
+                    'Gradualmente, aumente o número de figuras e sons trabalhados.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com sons bem distintos e visualmente diferentes na articulação (ex: /m/ vs /p/). Use apenas duas figuras para escolha.',
+                    '<strong>Desafiar:</strong> Peça para a criança encontrar objetos no ambiente que comecem com um determinado som. Use palavras mais longas.',
+                    '<strong>Visual:</strong> Mostre a letra que representa o som inicial junto com a figura.',
+                    '<strong>Lúdico:</strong> Faça uma "caça ao tesouro" de objetos pela casa que comecem com um som específico.'
+                ],
+                science_snippet: 'A identificação de sons iniciais (aliteração) é um dos primeiros níveis da consciência fonológica. O treino explícito dessa habilidade, usando figuras e uma abordagem lúdica, é recomendado para crianças com e sem dificuldades de linguagem.[4, 18]'
+            },
+            {
+                id: 'ling17', name: 'Rimar é Legal!', area: 'linguagem', category: 'Desenvolvendo a Consciência Fonológica',
+                objective: 'Desenvolver a consciência fonológica, especificamente a habilidade de identificar e produzir rimas.',
+                materials: ['Cartões com figuras de palavras que rimam (ex: p<strong>ão</strong>/m<strong>ão</strong>, g<strong>ato</strong>/p<strong>ato</strong>, jan<strong>ela</strong>/pan<strong>ela</strong>, an<strong>el</strong>/past<strong>el</strong>).'],
+                steps: [
+                    'Apresente um par de figuras que rimam (ex: GATO e PATO).',
+                    'Diga os nomes das figuras, enfatizando a parte que rima: "Olha, G<strong>ATO</strong>... P<strong>ATO</strong>. Elas terminam com o mesmo som! Elas rimam!".',
+                    'Peça para a criança repetir as palavras.',
+                    'Depois, mostre uma figura (ex: MÃO) e duas outras opções (ex: PÃO e PÉ). Pergunte: "MÃO rima com PÃO ou com PÉ?".',
+                    'Cante músicas e leia poemas que contenham rimas, destacando-as.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com rimas muito óbvias e com apoio visual claro. Diga as duas palavras que rimam e peça apenas para a criança confirmar se rimam ("Gato e pato rimam? Sim!").',
+                    '<strong>Desafiar:</strong> Peça para a criança tentar encontrar uma palavra que rime com uma palavra dada por você (ex: "O que rima com BOLA?"). Crie rimas engraçadas.',
+                    '<strong>Jogo da Memória:</strong> Faça um jogo da memória com os pares de figuras que rimam.'
+                ],
+                science_snippet: 'A habilidade de reconhecer rimas é um componente importante da consciência fonológica e está associada ao sucesso na aprendizagem da leitura.[16, 18] Atividades lúdicas, como jogos e canções, são eficazes para desenvolver essa percepção.[16]'
+            },
+            {
+                id: 'ling18', name: 'Batendo Palmas para as Sílabas', area: 'linguagem', category: 'Desenvolvendo a Consciência Fonológica',
+                objective: 'Desenvolver a consciência silábica, especificamente a habilidade de segmentar palavras em sílabas.',
+                materials: ['Figuras de objetos com nomes de 1, 2 ou 3 sílabas (ex: PÉ, MÃO, BOLA, GATO, SAPO, MACACO, PANELA, BONECA).'],
+                steps: [
+                    'Mostre uma figura (ex: BOLA).',
+                    'Diga o nome da palavra lentamente, batendo uma palma para cada sílaba: "BO (palma) - LA (palma)". Diga: "Bola tem duas palmas, duas sílabas!".',
+                    'Peça para a criança bater palmas junto com você enquanto fala a palavra silabada.',
+                    'Repita com outras palavras, começando com palavras de duas sílabas, depois uma e depois três.',
+                    'Pode-se usar blocos de montar, onde cada bloco representa uma sílaba.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com palavras curtas e familiares. Use o movimento do corpo (pular, dar passos) para marcar as sílabas.',
+                    '<strong>Desafiar:</strong> Use palavras mais longas. Peça para a criança dizer quantas sílabas tem uma palavra sem bater palmas, apenas pensando.',
+                    '<strong>Visual:</strong> Escreva a palavra e separe as sílabas visualmente (ex: BO-LA).'
+                ],
+                science_snippet: 'A segmentação silábica é uma habilidade fundamental da consciência fonológica que facilita a decodificação na leitura e a segmentação na escrita.[16, 18] A associação do ritmo da fala (palmas) com a segmentação torna o conceito mais concreto.'
+            },
+            {
+                id: 'ling19', name: 'Que Palavra Se Formou? (Síntese Silábica)', area: 'linguagem', category: 'Desenvolvendo a Consciência Fonológica',
+                objective: 'Desenvolver a consciência silábica, especificamente a habilidade de juntar sílabas para formar uma palavra (síntese silábica).',
+                materials: ['Figuras de palavras conhecidas pela criança (ex: BOLA, CASA, GATO).'],
+                steps: [
+                    'Escolha uma figura (ex: BOLA), mas não a mostre para a criança ainda.',
+                    'Diga as sílabas da palavra separadamente, com uma pequena pausa entre elas: "BO... LA. Que palavra eu disse?".',
+                    'Incentive a criança a juntar as sílabas e dizer a palavra completa ("BOLA!").',
+                    'Se ela acertar, mostre a figura como reforço.',
+                    'Repita com outras palavras.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com palavras de duas sílabas bem conhecidas. Diga as sílabas com uma pausa menor. Se a criança tiver dificuldade, diga a primeira sílaba e espere que ela complete com a segunda (ex: "CA...").',
+                    '<strong>Desafiar:</strong> Use palavras de três sílabas. Faça o jogo sem mostrar as figuras, apenas com a audição.',
+                    '<strong>Fantoche:</strong> Use um fantoche que "fala em pedacinhos" e a criança precisa descobrir o que ele disse.'
+                ],
+                science_snippet: 'A síntese silábica é o processo inverso da segmentação e também é importante para a leitura fluente.[15, 18] Esta atividade ajuda a criança a perceber como os sons se unem para formar palavras.'
+            },
+            {
+                id: 'ling20', name: 'Bingo dos Sons', area: 'linguagem', category: 'Desenvolvendo a Consciência Fonológica',
+                objective: 'Desenvolver a discriminação auditiva de sons (fonemas) iniciais e a associação fonema-grafema (letra) de forma lúdica.',
+                materials: ['Cartelas de bingo para cada jogador com 4-6 quadrados. Em cada quadrado, uma letra do alfabeto (comece com vogais e consoantes fáceis e frequentes).', 'Fichas ou pedrinhas para marcar.', 'Um saco com cartões, cada um contendo uma figura cujo nome comece com uma das letras das cartelas (ex: se tem a letra A, uma figura de ABELHA; se tem B, uma figura de BOLA).'],
+                steps: [
+                    'Distribua uma cartela para cada jogador e as fichas para marcar.',
+                    'O "cantador" (adulto) retira uma figura do saco, mostra para os jogadores e diz o nome da figura, enfatizando o som inicial: "Olha, A-A-ABELHA. Começa com o som /a/". (Se a criança já conhece as letras, pode dizer "Começa com a letra A").',
+                    'Os jogadores procuram em suas cartelas se têm a letra correspondente ao som inicial da figura.',
+                    'Quem tiver, marca com uma ficha.',
+                    'O jogo continua até alguém completar a cartela (ou uma linha, conforme combinado).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use apenas vogais nas cartelas. Em vez de letras, use as próprias figuras nas cartelas, e o cantador apenas diz o nome da figura sorteada (jogo de bingo de figuras).',
+                    '<strong>Desafiar:</strong> Use mais letras, incluindo consoantes mais difíceis. O cantador pode apenas dizer o som inicial, sem mostrar a figura.',
+                    '<strong>Auto-cantado:</strong> Deixe as crianças mais velhas serem o "cantador".'
+                ],
+                science_snippet: 'O bingo é uma forma divertida de trabalhar a discriminação auditiva e a associação entre o som e a letra (princípio alfabético), fundamental para a alfabetização.[18, 25] O apoio visual das figuras é importante, especialmente para a memória auditiva.[18]'
+            },
+            {
+                id: 'ling21', name: 'Meu Nome em Todo Lugar', area: 'linguagem', category: 'Primeiros Passos na Leitura e Escrita',
+                objective: 'Promover o reconhecimento visual do próprio nome escrito e iniciar a compreensão da função social da escrita.',
+                materials: ['Cartões com o nome da criança escrito em letra de forma maiúscula e legível', 'Etiquetas adesivas com o nome', 'Objetos pessoais da criança (caderno, copo, cadeira, porta do quarto).'],
+                steps: [
+                    'Faça um cartão bem bonito com o nome da criança. Mostre para ela e diga: "Olha, este é o seu nome! Aqui está escrito [Nome da Criança]".',
+                    'Coloque o cartão do nome em um lugar visível para ela (ex: na porta do quarto, na geladeira).',
+                    'Use etiquetas com o nome dela para identificar seus pertences (ex: copo, mochila, caderno). Sempre que etiquetar algo, mostre para ela e leia o nome.',
+                    'Brinque de "procurar o nome". Espalhe alguns cartões com o nome dela e outros com nomes diferentes (ou palavras aleatórias) e peça para ela encontrar o cartão com o nome dela.',
+                    'Mostre o nome dela em listas de chamada, em trabalhos da escola, etc.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece apenas com a primeira letra do nome. Use uma foto da criança ao lado do nome no cartão.',
+                    '<strong>Desafiar:</strong> Peça para ela tentar copiar o nome. Mostre nomes de outras pessoas da família e compare com o dela.',
+                    '<strong>Sensorial:</strong> Faça o nome com letras móveis, massinha, ou escreva na areia/farinha.'
+                ],
+                science_snippet: 'O reconhecimento do próprio nome é frequentemente o primeiro contato significativo da criança com a leitura global.[4, 26] Essa atividade capitaliza o interesse natural da criança pelo seu nome e introduz a ideia de que a escrita representa algo.'
+            },
+            {
+                id: 'ling22', name: 'Alfabeto Divertido com Texturas', area: 'linguagem', category: 'Primeiros Passos na Leitura e Escrita',
+                objective: 'Facilitar o reconhecimento das letras do alfabeto (forma visual e tátil) e iniciar a associação entre a letra e seu som (princípio alfabético).',
+                materials: ['Cartões grandes com as letras do alfabeto escritas em letra de forma maiúscula.', 'Materiais com diferentes texturas para colar sobre o traçado das letras (ex: lixa fina, barbante, algodão, feltro, grãos de feijão/arroz).', 'Cola.'],
+                steps: [
+                    'Escolha uma letra para trabalhar (ex: a letra A).',
+                    'Mostre o cartão com a letra A para a criança. Diga o nome da letra ("Esta é a letra A") e o som que ela faz ("/a/").',
+                    'Convide a criança a passar o dedo sobre a letra no cartão.',
+                    'Depois, ajude a criança a colar o material de textura sobre o traçado da letra A. Enquanto fazem isso, repitam o nome e o som da letra.',
+                    'Quando estiver pronto, incentive a criança a "sentir" a letra com os dedos, traçando o formato.',
+                    'Faça isso com outras letras, uma de cada vez, ao longo de várias sessões.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com as vogais ou com as letras do nome da criança.',
+                    '<strong>Desafiar:</strong> Apresente uma palavra simples que comece com a letra trabalhada (ex: para A, mostre a figura de uma ABELHA). Peça para a criança encontrar objetos que comecem com aquela letra/som.',
+                    '<strong>Corpo:</strong> "Desenhe" a letra nas costas da criança e peça para ela adivinhar qual é.'
+                ],
+                science_snippet: 'A abordagem multissensorial, envolvendo o tato, ajuda na memorização da forma das letras, especialmente para crianças que se beneficiam de aprendizado concreto.[4, 18] Associar a forma visual e tátil ao som da letra é um passo importante para o desenvolvimento do princípio alfabético.'
+            },
+            {
+                id: 'ling23', name: 'Lendo o Ambiente (Rótulos e Placas)', area: 'linguagem', category: 'Primeiros Passos na Leitura e Escrita',
+                objective: 'Desenvolver a leitura global de palavras funcionais presentes no ambiente e compreender a função da escrita no cotidiano.',
+                materials: ['Embalagens de produtos conhecidos pela criança (caixa de cereal, iogurte, biscoito)', 'Revistas com logotipos', 'Fotos de placas comuns (PARE, SAÍDA, BANHEIRO).'],
+                steps: [
+                    'Durante as atividades do dia a dia (ex: no supermercado, em casa, em um passeio), aponte para rótulos, logotipos e placas conhecidas.',
+                    'Leia a palavra em voz alta, associando-a ao produto ou local. Ex: "Olha, aqui está escrito [marca do iogurte favorito dela]". "Esta placa diz PARE".',
+                    'Em casa, brinque com as embalagens vazias. Peça para ela "ler" (reconhecer visualmente) o nome do produto.',
+                    'Crie um "mural de palavras conhecidas" com rótulos e logotipos que ela consegue identificar.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Foque em 2-3 logotipos ou rótulos muito familiares e visualmente distintos.',
+                    '<strong>Desafiar:</strong> Peça para ela encontrar um determinado rótulo em uma prateleira (com supervisão). Crie um jogo de correspondência entre o produto e seu rótulo escrito.',
+                    '<strong>Funcional:</strong> Use a leitura de rótulos para atividades práticas, como ajudar a guardar as compras ou escolher o cereal para o café da manhã.'
+                ],
+                science_snippet: 'Crianças com síndrome de Down frequentemente demonstram boa capacidade de leitura logográfica, ou seja, reconhecer palavras como se fossem desenhos, com base em suas características visuais.[4] Esta atividade aproveita essa habilidade e mostra a funcionalidade da leitura no mundo real.[15]'
+            },
+            {
+                id: 'ling24', name: 'Bilhetinhos e Listas Mágicas', area: 'linguagem', category: 'Primeiros Passos na Leitura e Escrita',
+                objective: 'Introduzir a escrita com função social (comunicação), estimular a tentativa de escrita espontânea ou cópia de palavras significativas.',
+                materials: ['Papel, lápis, canetinhas', 'Envelopes coloridos (opcional).', 'Figuras para representar itens de uma lista (opcional).'],
+                steps: [
+                    '<strong>Bilhetes:</strong> Proponha escrever um bilhete simples para alguém da família (ex: "EU TE AMO, MAMÃE" ou um desenho com o nome). Ajude a criança a pensar no que quer "dizer". Ela pode ditar e você escreve, ou ela pode tentar copiar as palavras, ou fazer um desenho e assinar o nome. Entreguem o bilhete juntos.',
+                    '<strong>Listas:</strong> Façam juntos uma lista de compras simples antes de ir ao supermercado. Use figuras dos produtos e, ao lado, escreva o nome (ou peça para ela tentar escrever/copiar). No supermercado, usem a lista para encontrar os produtos. Outras listas: lista de brinquedos favoritos, lista de coisas para levar em um passeio.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> A criança pode apenas desenhar no bilhete e tentar escrever a primeira letra do seu nome. Para a lista, use apenas figuras e você escreve a palavra ao lado.',
+                    '<strong>Desafiar:</strong> Incentive a criança a tentar escrever mais palavras sozinha na lista ou no bilhete. Peça para ela ler a lista para você.',
+                    '<strong>Tecnologia:</strong> Use um aplicativo de notas simples no tablet ou celular para criar listas digitais com emojis ou figuras.'
+                ],
+                science_snippet: 'A escrita funcional, como bilhetes e listas, demonstra o propósito da comunicação escrita e aumenta a motivação.[15, 28] Valorizar qualquer tentativa de escrita, desde rabiscos intencionais até a cópia de letras, é fundamental para construir a confiança da criança.'
+            },
+            {
+                id: 'ling25', name: 'Pareando Palavras e Figuras', area: 'linguagem', category: 'Primeiros Passos na Leitura e Escrita',
+                objective: 'Reforçar a leitura global de palavras e a associação entre a palavra escrita e seu significado visual.',
+                materials: ['Cartões com figuras de objetos/animais conhecidos', 'Cartões separados com as palavras correspondentes escritas em letra de forma maiúscula.'],
+                steps: [
+                    'Comece com um pequeno conjunto de 3-4 pares de figura-palavra.',
+                    'Coloque os cartões de figura sobre a mesa.',
+                    'Pegue um cartão de palavra, leia-o em voz alta (ex: "BOLA") e peça para a criança encontrar a figura correspondente e colocar o cartão da palavra ao lado ou embaixo da figura.',
+                    'Se a criança tiver dificuldade, ajude-a, relendo a palavra e apontando para as figuras.',
+                    'Repita com as outras palavras.',
+                    'Depois que ela dominar essa etapa, você pode colocar as palavras na mesa e entregar as figuras uma a uma para ela parear com a palavra correta.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use palavras muito curtas e visualmente distintas. Comece com apenas dois pares.',
+                    '<strong>Desafiar:</strong> Aumente o número de pares. Use palavras mais parecidas visualmente. Faça um jogo da memória com os pares de figura-palavra.',
+                    '<strong>Frases:</strong> Crie cartões com frases curtas (ex: "O GATO BEBE LEITE") e cartões com figuras que representem a frase inteira para pareamento.'
+                ],
+                science_snippet: 'Esta atividade é central no método de leitura global, que se baseia na associação direta entre a forma visual da palavra e seu significado, uma estratégia eficaz para iniciar a leitura em crianças com SD.[4, 26] O programa "Aprender a Ler para Aprender a Falar" utiliza extensivamente essa correspondência.[26]'
+            },
+            {
+                id: 'mat26', name: 'Caça aos Pares Idênticos', area: 'matematica', category: 'Construindo Noções Pré-Numéricas e de Classificação',
+                objective: 'Desenvolver a habilidade de pareamento visual de objetos ou figuras idênticas, fundamental para a discriminação visual e o reconhecimento de padrões.',
+                materials: ['Pares de objetos idênticos (ex: dois carrinhos vermelhos iguais, duas bonecas iguais, dois blocos azuis iguais)', 'Pares de cartões com figuras idênticas (fotos de animais, frutas, objetos).'],
+                steps: [
+                    'Comece com 2 ou 3 pares de objetos/figuras.',
+                    'Coloque um item de cada par à frente da criança.',
+                    'Pegue um dos itens restantes, mostre para a criança e diga: "Vamos achar o irmãozinho deste? Onde está o outro igual a este?".',
+                    'Incentive a criança a procurar e apontar para o item idêntico.',
+                    'Quando ela encontrar, coloque os dois itens juntos, reforçando: "Muito bem! Estes são iguais!".',
+                    'Repita o processo com os outros pares.',
+                    'Gradualmente, aumente o número de pares.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use objetos bem distintos entre os pares (ex: um carro e uma bola, em vez de dois carros de cores diferentes).',
+                    '<strong>Desafiar:</strong> Use figuras mais abstratas ou com pequenas diferenças. Faça um jogo da memória com os pares.',
+                    '<strong>Tátil:</strong> Use pares de objetos com texturas diferentes para pareamento tátil (com os olhos vendados, para crianças mais velhas).'
+                ],
+                science_snippet: 'A habilidade de parear objetos idênticos é um dos processos mentais básicos para a matemática, conhecido como correspondência.[13] Esta atividade desenvolve a percepção visual e a capacidade de identificar semelhanças, que são pré-requisitos para a classificação e a contagem.'
+            },
+            {
+                id: 'mat27', name: 'Guardiões das Cores', area: 'matematica', category: 'Construindo Noções Pré-Numéricas e de Classificação',
+                objective: 'Desenvolver a habilidade de classificação de objetos por cor.',
+                materials: ['Diversos objetos pequenos de 2 ou 3 cores diferentes (ex: blocos de montar vermelhos, azuis e amarelos; tampinhas de garrafa dessas cores; pompons coloridos).', 'Três recipientes (cestos, caixas ou potes) identificados com as cores correspondentes (ex: um cesto com um papel vermelho colado, outro com azul, outro com amarelo).'],
+                steps: [
+                    'Coloque os objetos misturados em uma pilha ou recipiente maior.',
+                    'Apresente os cestos coloridos. Aponte para o cesto vermelho e diga: "Este é o cesto do <strong>vermelho</strong>. Aqui vamos colocar tudo o que for <strong>vermelho</strong>." Faça o mesmo para as outras cores.',
+                    'Pegue um objeto (ex: um bloco vermelho), diga "Este bloco é <strong>vermelho</strong>. Ele vai no cesto do <strong>vermelho</strong>." e coloque-o no cesto correto.',
+                    'Entregue um objeto para a criança e pergunte: "De que cor é este? Onde ele vai?". Ajude-a a identificar a cor e a colocar no cesto correspondente.',
+                    'Continue até todos os objetos serem classificados.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com apenas duas cores bem contrastantes. Use objetos que sejam apenas daquela cor (sem muitos detalhes de outras cores).',
+                    '<strong>Desafiar:</strong> Aumente o número de cores. Use objetos com múltiplas cores e peça para classificar pela cor predominante. Introduza outras categorias de classificação (forma, tamanho).',
+                    '<strong>Jogo:</strong> Transforme em um jogo de "corrida das cores", onde cada um tenta encher seu cesto colorido primeiro.'
+                ],
+                science_snippet: 'A classificação é um processo mental fundamental para organizar informações e construir conceitos matemáticos.[13] Aprender a agrupar objetos por um atributo específico, como a cor, ajuda a criança a desenvolver o pensamento lógico e a percepção de semelhanças e diferenças.[11]'
+            },
+            {
+                id: 'mat28', name: 'Organizando por Tamanho', area: 'matematica', category: 'Construindo Noções Pré-Numéricas e de Classificação',
+                objective: 'Desenvolver a habilidade de seriação simples, ordenando objetos por tamanho (grande/pequeno, maior/menor).',
+                materials: ['Conjuntos de 3 a 5 objetos do mesmo tipo, mas de tamanhos visivelmente diferentes (ex: 3 ursinhos de pelúcia de tamanhos diferentes; 4 potes de cozinha que se encaixam; 5 círculos de cartolina de diâmetros variados).'],
+                steps: [
+                    'Apresente um conjunto de objetos (ex: os 3 ursinhos) para a criança.',
+                    'Converse sobre os tamanhos: "Olha, este urso é <strong>grande</strong>. Este é <strong>médio</strong>. E este é <strong>pequeno</strong>." (adapte o vocabulário conforme a criança).',
+                    'Peça para a criança colocar os ursos em ordem, do menor para o maior (ou do maior para o menor).',
+                    'Demonstre como fazer, se necessário. Compare dois ursos de cada vez: "Qual é o maior?".',
+                    'Quando ela conseguir ordenar, misture-os e peça para ela fazer novamente.',
+                    'Use outros conjuntos de objetos.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com apenas dois objetos (um grande e um pequeno). Use um gabarito visual com os contornos dos objetos em ordem para ela encaixar.',
+                    '<strong>Desafiar:</strong> Aumente o número de objetos na série. Use objetos com diferenças de tamanho mais sutis. Introduza outros critérios de ordenação (ex: do mais claro para o mais escuro).',
+                    '<strong>Prático:</strong> Ordene colheres por tamanho ao guardar, ou livros na estante.'
+                ],
+                science_snippet: 'A seriação, ou capacidade de ordenar elementos segundo uma grandeza crescente ou decrescente, é outra habilidade pré-numérica essencial.[11, 13] Ela envolve a comparação e a percepção de relações entre os objetos.'
+            },
+            {
+                id: 'mat29', name: 'Onde Cabe? (Formas e Encaixes)', area: 'matematica', category: 'Construindo Noções Pré-Numéricas e de Classificação',
+                objective: 'Promover o reconhecimento de formas geométricas básicas (círculo, quadrado, triângulo) e desenvolver noções espaciais através de atividades de encaixe.',
+                materials: ['Brinquedos de encaixe de formas (aqueles com buracos correspondentes às formas geométricas e as peças para encaixar).', 'Se não tiver, pode fazer com uma caixa de papelão com recortes das formas e as formas correspondentes em cartolina grossa ou EVA.'],
+                steps: [
+                    'Apresente o brinquedo de encaixe ou o material caseiro.',
+                    'Pegue uma forma (ex: o círculo), nomeie-a ("Este é o <strong>círculo</strong>") e mostre para a criança como ela se encaixa no buraco correspondente.',
+                    'Entregue uma forma para a criança e incentive-a a encontrar o buraco onde ela cabe.',
+                    'Nomeie as formas conforme a criança as manipula.',
+                    'Celebre quando ela conseguir encaixar corretamente.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com apenas uma ou duas formas bem distintas (ex: círculo e quadrado). Ajude a criança a girar a peça para encontrar a posição correta.',
+                    '<strong>Desafiar:</strong> Use mais formas, incluindo algumas mais complexas (estrela, coração). Peça para a criança nomear a forma antes de encaixar.',
+                    '<strong>Variedade:</strong> Use quebra-cabeças simples de formas geométricas.'
+                ],
+                science_snippet: 'O reconhecimento de formas e a capacidade de encaixá-las desenvolvem a percepção visual-espacial e a coordenação motora fina.[30] Essas habilidades são importantes para a compreensão da geometria e para a organização espacial em geral.[11]'
+            },
+            {
+                id: 'mat30', name: 'Sequência de Cores com Blocos', area: 'matematica', category: 'Construindo Noções Pré-Numéricas e de Classificação',
+                objective: 'Desenvolver a capacidade de observar, copiar e continuar padrões simples de cores, introduzindo a noção de sequência.',
+                materials: ['Blocos de montar de pelo menos 2-3 cores diferentes (ex: vermelho, azul, amarelo).'],
+                steps: [
+                    'Comece com um padrão simples de duas cores. Faça uma pequena torre ou fila com os blocos, por exemplo: VERMELHO - AZUL - VERMELHO - AZUL.',
+                    'Mostre para a criança e diga: "Olha o meu padrão: vermelho, azul, vermelho, azul".',
+                    'Peça para ela copiar o seu padrão, fazendo uma torre/fila igual ao lado da sua.',
+                    'Quando ela conseguir copiar, peça para ela continuar o seu padrão: "Qual bloco vem agora depois do azul?".',
+                    'Gradualmente, introduza padrões com três cores ou sequências mais longas (ex: VERMELHO - VERMELHO - AZUL - VERMELHO - VERMELHO - AZUL).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com padrões de repetição de uma única cor (ex: VERMELHO - pausa - VERMELHO) ou ABAB muito curtos. Verbalize o padrão constantemente.',
+                    '<strong>Desafiar:</strong> Crie padrões mais complexos (ABCABC, AABBAA). Peça para a criança criar seu próprio padrão para você copiar ou continuar.',
+                    '<strong>Outros Materiais:</strong> Use contas coloridas para fazer colares com padrões, ou desenhe padrões com lápis de cor.'
+                ],
+                science_snippet: 'A identificação e continuação de padrões são habilidades fundamentais para o raciocínio lógico-matemático.[13] Esta atividade introduz a previsibilidade e a regra, conceitos importantes em matemática.'
+            },
+            {
+                id: 'mat31', name: 'Contando com os Dedos Mágicos', area: 'matematica', category: 'Dominando a Contagem e o Reconhecimento de Números',
+                objective: 'Desenvolver a contagem oral de 1 a 5 (ou 10), a correspondência um-a-um entre o dedo levantado e a palavra-número, e a representação de pequenas quantidades com os dedos.',
+                materials: ['As próprias mãos da criança e do adulto.'],
+                steps: [
+                    'Sente-se de frente para a criança.',
+                    'Mostre um dedo e diga "UM". Peça para a criança mostrar um dedo também.',
+                    'Mostre dois dedos e diga "DOIS". Peça para ela mostrar dois dedos. Conte junto com ela: "UM, DOIS".',
+                    'Continue até cinco dedos, sempre contando em voz alta e incentivando a criança a levantar os dedos correspondentes.',
+                    'Depois, peça para a criança mostrar uma quantidade de dedos que você disser: "Mostre para mim TRÊS dedos".',
+                    'Cante músicas que envolvam contar nos dedos (ex: "Mariana conta um...").'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece contando apenas até 3. Ajude a criança a levantar os dedos corretamente.',
+                    '<strong>Desafiar:</strong> Conte até 10, usando as duas mãos. Peça para ela contar quantos dedos você está mostrando.',
+                    '<strong>Visual:</strong> Pinte as unhas da criança com cores diferentes para ajudar a distinguir os dedos durante a contagem.'
+                ],
+                science_snippet: 'Os dedos são um recurso de contagem natural e sempre disponível, oferecendo um suporte concreto e visual para a compreensão dos números.[13, 17] A contagem com os dedos ajuda a estabelecer a correspondência termo a termo.'
+            },
+            {
+                id: 'mat32', name: 'Trilha dos Números com Pinos', area: 'matematica', category: 'Dominando a Contagem e o Reconhecimento de Números',
+                objective: 'Reforçar o reconhecimento de numerais (1 a 10), a sequência numérica e a associação entre o numeral e a quantidade correspondente.',
+                materials: ['Uma trilha desenhada em cartolina com casas numeradas de 1 a 10.', 'Pinos ou pequenos objetos para representar as quantidades (ex: tampinhas, botões).', 'Um dado simples (com pontos de 1 a 3, ou numerais de 1 a 3).', 'Pequenos marcadores para os jogadores (ex: bonequinhos de brinquedo).'],
+                steps: [
+                    'Cada jogador escolhe um marcador e o coloca no início da trilha (antes do número 1).',
+                    'O primeiro jogador lança o dado.',
+                    'O jogador conta os pontos/lê o numeral do dado e avança esse número de casas na trilha.',
+                    'Ao parar em uma casa, o jogador deve pegar o número de pinos correspondente ao número da casa onde parou e colocá-los sobre essa casa. (Ex: se parou na casa 4, pega 4 pinos).',
+                    'O próximo jogador faz o mesmo.',
+                    'Ganha quem chegar primeiro ao final da trilha (casa 10).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use uma trilha menor (1 a 5). O adulto ajuda a contar as casas e a pegar os pinos. Use um dado que mostre apenas 1 ou 2 pontos.',
+                    '<strong>Desafiar:</strong> Use uma trilha maior (até 20). Introduza casas com "desafios" (ex: "volte 2 casas" ou "jogue de novo").',
+                    '<strong>Material:</strong> O material Numicon pode ser usado para representar as quantidades nas casas.[17]'
+                ],
+                science_snippet: 'Jogos de tabuleiro simples são excelentes para praticar a contagem, o reconhecimento de numerais e a sequência numérica de forma lúdica.[12] A ação de pegar os pinos reforça a associação quantidade-numeral.[17, 32]'
+            },
+            {
+                id: 'mat33', name: 'Quantos Brinquedos na Caixa?', area: 'matematica', category: 'Dominando a Contagem e o Reconhecimento de Números',
+                objective: 'Desenvolver a habilidade de contagem de objetos (até 5 ou 10) e a compreensão do conceito de quantidade (cardinalidade).',
+                materials: ['Uma caixa ou cesto', 'Uma coleção de brinquedos pequenos e idênticos ou semelhantes (ex: 10 carrinhos, 10 blocos, 10 animais de plástico).'],
+                steps: [
+                    'Coloque um número pequeno de brinquedos na caixa (ex: 3 carrinhos) sem que a criança veja quantos são.',
+                    'Pergunte: "Quantos carrinhos será que tem aqui dentro?".',
+                    'Peça para a criança tirar os carrinhos da caixa um por um, contando em voz alta à medida que os retira e os enfileira sobre a mesa.',
+                    'Quando todos os carrinhos estiverem fora, pergunte: "Então, quantos carrinhos tem aqui?". Incentive-a a dizer o último número contado.',
+                    'Repita com diferentes quantidades e diferentes tipos de brinquedos.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com quantidades muito pequenas (1, 2 ou 3). Conte junto com a criança, tocando em cada objeto.',
+                    '<strong>Desafiar:</strong> Use quantidades maiores (até 10 ou mais, conforme a capacidade da criança). Peça para ela estimar quantos brinquedos há na caixa antes de contar.',
+                    '<strong>Comparação:</strong> Coloque duas caixas com diferentes quantidades e pergunte: "Qual caixa tem mais brinquedos?".'
+                ],
+                science_snippet: 'Esta atividade foca no princípio da cardinalidade – a compreensão de que o último número na sequência de contagem representa o total de itens do conjunto.[11, 13] A ação de retirar e enfileirar os objetos ajuda na organização da contagem.'
+            },
+            {
+                id: 'mat34', name: 'Jogo de Boliche Numérico', area: 'matematica', category: 'Dominando a Contagem e o Reconhecimento de Números',
+                objective: 'Praticar o reconhecimento de numerais e a contagem de objetos (pinos derrubados) em um contexto de jogo motor.',
+                materials: ['6 a 10 pinos de boliche de plástico (ou garrafas pet vazias e estáveis). Em cada pino, cole um numeral (ex: de 1 a 6, ou de 1 a 10, dependendo do número de pinos).', 'Uma bola leve.'],
+                steps: [
+                    'Arrume os pinos numerados.',
+                    'Peça para a criança jogar a bola para tentar derrubar os pinos.',
+                    'Após cada jogada, ajude a criança a contar quantos pinos ela derrubou.',
+                    'Peça para ela identificar os numerais nos pinos que caíram.',
+                    'Anote os pontos (pode ser o número de pinos derrubados ou a soma dos numerais nos pinos, para crianças mais avançadas).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use menos pinos. Foque apenas na contagem dos pinos derrubados, sem se preocupar com os numerais neles. Aproxime a criança dos pinos para facilitar derrubá-los.',
+                    '<strong>Desafiar:</strong> Peça para a criança somar os números dos pinos derrubados (se ela já tiver noção de adição). Crie regras como "ganha um ponto extra se derrubar o pino com o número 5".',
+                    '<strong>Coordenação:</strong> Esta atividade também ajuda a desenvolver a coordenação motora grossa.'
+                ],
+                science_snippet: 'Jogos que envolvem movimento e um objetivo claro, como o boliche, são altamente motivadores.[12] A contagem dos pinos e o reconhecimento dos numerais são integrados de forma natural à brincadeira.[33]'
+            },
+            {
+                id: 'mat35', name: 'Pescaria dos Números e Quantidades', area: 'matematica', category: 'Dominando a Contagem e o Reconhecimento de Números',
+                objective: 'Fortalecer a associação entre numerais e as quantidades correspondentes, e praticar o reconhecimento de numerais.',
+                materials: ['"Peixinhos" feitos de cartolina ou EVA. Em alguns peixinhos, escreva numerais (ex: 1 a 5). Em outros, cole figuras representando quantidades (ex: um peixinho com 3 bolinhas, outro com 1 estrela, etc.).', 'Coloque um clipe de metal em cada peixinho.', 'Uma "vara de pescar" feita com um pauzinho, barbante e um ímã na ponta.', 'Um recipiente azul para simular a água.'],
+                steps: [
+                    'Coloque os peixinhos no "lago" (recipiente).',
+                    'A criança "pesca" um peixinho.',
+                    'Se pescar um peixinho com um numeral, ela deve dizer o nome do número e, em seguida, pegar a quantidade correspondente de objetos (ex: feijões, tampinhas) ou mostrar nos dedos.',
+                    'Se pescar um peixinho com uma quantidade (figuras), ela deve contar as figuras e, em seguida, encontrar um cartão com o numeral correspondente (tenha cartões de numerais à parte).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use apenas peixinhos com numerais (1 a 3) e peça para a criança apenas nomear o número. Ou use apenas peixinhos com quantidades (1 a 3) e peça para ela contar.',
+                    '<strong>Desafiar:</strong> Aumente o range dos números/quantidades. Crie peixinhos com pequenas somas para resolver (ex: 2 bolinhas + 1 bolinha).',
+                    '<strong>Competição Amigável:</strong> Se jogar com mais de uma criança, quem pescar mais peixinhos corretos ganha.'
+                ],
+                science_snippet: 'A atividade lúdica de pescaria torna o aprendizado de números e quantidades mais atraente.[17] A manipulação dos peixinhos e a necessidade de associar o símbolo numérico à sua representação concreta (ou vice-versa) reforçam a compreensão do conceito de número.[33]'
+            },
+             {
+                id: 'mat36', name: 'Juntando Blocos (Adição)', area: 'matematica', category: 'Aventuras com Operações Básicas',
+                objective: 'Introduzir o conceito de adição como "juntar" ou "acrescentar" quantidades, utilizando material concreto.',
+                materials: ['Blocos de montar de cores diferentes (ou quaisquer outros objetos contáveis, como tampinhas, carrinhos).'],
+                steps: [
+                    'Comece com quantidades pequenas. Diga: "Vamos pegar <strong>2</strong> blocos vermelhos". Ajude a criança a contar e separar 2 blocos vermelhos.',
+                    'Depois, diga: "Agora, vamos pegar <strong>1</strong> bloco azul". Ajude-a a separar 1 bloco azul.',
+                    'Coloque os dois grupos de blocos próximos e diga: "Se a gente <strong>juntar</strong> os 2 blocos vermelhos com 1 bloco azul, quantos blocos vamos ter no total? Vamos contar?".',
+                    'Junte todos os blocos e conte com a criança: "UM, DOIS, TRÊS. Temos <strong>TRÊS</strong> blocos!".',
+                    'Repita com outras combinações de números pequenos (ex: 1+1, 2+1, 1+2, 2+2, 3+1).',
+                    'Use a linguagem: "2 blocos mais 1 bloco são 3 blocos".'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use apenas uma cor de blocos. Comece com 1+1. Verbalize cada passo claramente.',
+                    '<strong>Desafiar:</strong> Introduza o símbolo de "+" e "=" em cartões. Escreva a continha (ex: 2 + 1 = ) e peça para ela resolver com os blocos.',
+                    '<strong>Histórias:</strong> Crie pequenas histórias: "O João tinha 2 carrinhos. Ele ganhou mais 1. Quantos carrinhos o João tem agora?".'
+                ],
+                science_snippet: 'A adição é compreendida de forma mais eficaz quando apresentada através da manipulação de objetos concretos, permitindo à criança visualizar a ação de "juntar".[12, 13] Esta abordagem respeita a necessidade de concretude no aprendizado matemático de crianças com SD.'
+            },
+            {
+                id: 'mat37', name: 'Tirando Bolinhas (Subtração)', area: 'matematica', category: 'Aventuras com Operações Básicas',
+                objective: 'Introduzir o conceito de subtração como "tirar", "remover" ou "perder" quantidades, utilizando material concreto.',
+                materials: ['Bolinhas de gude, massinha de modelar (para fazer bolinhas), ou outros objetos pequenos e contáveis.', 'Um pote ou cestinha.'],
+                steps: [
+                    'Comece com uma quantidade inicial pequena. Diga: "Vamos colocar <strong>3</strong> bolinhas no pote". Conte junto com a criança enquanto colocam as bolinhas.',
+                    'Depois, diga: "Agora, vamos <strong>tirar 1</strong> bolinha do pote". Peça para a criança tirar uma bolinha.',
+                    'Pergunte: "Quantas bolinhas ficaram no pote? Vamos contar?". Conte as bolinhas restantes com ela: "UMA, DUAS. Ficaram <strong>DUAS</strong> bolinhas!".',
+                    'Repita com outras situações (ex: 2-1, 3-2, 4-1, 4-2).',
+                    'Use a linguagem: "3 bolinhas menos 1 bolinha são 2 bolinhas".'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com quantidades muito pequenas (ex: 2-1). Demonstre a ação de tirar de forma bem clara.',
+                    '<strong>Desafiar:</strong> Introduza o símbolo de "-" e "=". Escreva a continha (ex: 3 - 1 = ) e peça para ela resolver com as bolinhas.',
+                    '<strong>Histórias:</strong> "A Maria tinha 3 balas. Ela comeu 1. Quantas balas a Maria tem agora?".'
+                ],
+                science_snippet: 'Assim como na adição, a subtração é mais bem compreendida inicialmente através da manipulação de objetos, permitindo que a criança vivencie a ação de "remover".[12, 33] O apoio visual e tátil é fundamental.'
+            },
+            {
+                id: 'mat38', name: 'Torre de Adição', area: 'matematica', category: 'Aventuras com Operações Básicas',
+                objective: 'Visualizar a adição como um processo de empilhar ou juntar alturas/quantidades, utilizando material que permita a sobreposição.',
+                materials: ['Blocos de encaixe que possam ser empilhados (como Lego Duplo)', 'O material Numicon (peças que representam números através de furos e podem ser sobrepostas).'],
+                steps: [
+                    '<strong>Com blocos:</strong>',
+                    '  1. Peça para a criança fazer uma torre com um número específico de blocos (ex: "Faça uma torre com <strong>3</strong> blocos azuis").',
+                    '  2. Depois, peça para ela fazer outra torre com outro número de blocos (ex: "Agora, faça uma torre com <strong>2</strong> blocos vermelhos").',
+                    '  3. Pergunte: "Se a gente juntar essas duas torres, quão alta ela vai ficar? Quantos blocos teremos no total?".',
+                    '  4. Ajude a criança a encaixar uma torre sobre a outra (ou lado a lado e contar o total). Conte todos os blocos da nova torre.',
+                    '<strong>Com Numicon:</strong> Pegue a peça do Numicon que representa, por exemplo, o número 3. Pegue a peça que representa o 2. Sobreponha-as (se possível, dependendo do design) ou coloque-as lado a lado e conte todos os furos, ou encontre a peça do Numicon que representa o total (a peça do 5).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use números bem pequenos (1 e 1, 1 e 2).',
+                    '<strong>Desafiar:</strong> Use números maiores. Peça para ela registrar a soma com numerais.',
+                    '<strong>Comparação:</strong> Faça duas torres de adição diferentes e pergunte qual é a maior.'
+                ],
+                science_snippet: 'O material Numicon é especificamente desenhado para oferecer uma representação visual e tátil dos números, facilitando a compreensão de conceitos como adição.[5, 17] Empilhar blocos também fornece uma imagem concreta do aumento da quantidade.'
+            },
+            {
+                id: 'mat39', name: 'Quantos Ficaram? (Probleminhas de Subtração)', area: 'matematica', category: 'Aventuras com Operações Básicas',
+                objective: 'Aplicar o conceito de subtração na resolução de problemas simples do cotidiano, com forte apoio visual e concreto.',
+                materials: ['Figuras ou objetos reais que possam ser usados para representar os elementos do problema (ex: figuras de biscoitos, carrinhos de brinquedo, bonequinhos).'],
+                steps: [
+                    'Crie um cenário simples: "Olha, temos <strong>4</strong> biscoitos aqui na mesa." (Coloque 4 figuras de biscoitos ou biscoitos reais).',
+                    'Continue a história: "O [Nome da Criança] comeu <strong>1</strong> biscoito." (Peça para a criança tirar 1 biscoito/figura).',
+                    'Pergunte: "Quantos biscoitos ficaram?". Ajude a criança a contar os restantes.',
+                    'Outro exemplo: "Havia <strong>3</strong> passarinhos na árvore. <strong>2</strong> voaram. Quantos passarinhos ficaram na árvore?". Use figuras de passarinhos e tire duas.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use números muito pequenos (até 3). Deixe a criança manipular os objetos o tempo todo.',
+                    '<strong>Desafiar:</strong> Aumente os números. Peça para a criança desenhar a situação.',
+                    '<strong>Personalizar:</strong> Use nomes e situações da vida da criança para tornar os problemas mais significativos.'
+                ],
+                science_snippet: 'Resolver problemas contextualizados ajuda a criança a entender a aplicação prática da subtração e a dar sentido à operação.[11, 14] O uso de material manipulável é crucial para a visualização e compreensão do processo.[13]'
+            },
+            {
+                id: 'mat40', name: 'Jogo dos Dados: Somar para Ganhar', area: 'matematica', category: 'Aventuras com Operações Básicas',
+                objective: 'Praticar a adição de pequenas quantidades de forma lúdica, utilizando dados, e reforçar o reconhecimento de quantidades representadas por pontos.',
+                materials: ['Dois dados com pontos (de 1 a 3 pontos em cada face, para iniciantes, ou de 1 a 6 para mais avançados).', 'Pequenos objetos para contar (fichas, feijões) ou papel e lápis para marcar pontos.'],
+                steps: [
+                    'Cada jogador, na sua vez, lança os dois dados.',
+                    'O jogador conta os pontos de um dado e depois do outro.',
+                    'Em seguida, o jogador deve somar os pontos dos dois dados. Ele pode fazer isso contando todos os pontos diretamente nos dados, ou contando objetos correspondentes a cada dado e depois juntando-os.',
+                    'O resultado da soma são os pontos que o jogador ganha na rodada.',
+                    'Ganha quem tiver mais pontos após um número combinado de rodadas.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use apenas um dado e o jogador ganha o número de pontos que sair. Ou use dois dados, mas some apenas os pontos do maior dado.',
+                    '<strong>Desafiar:</strong> Use dados com numerais em vez de pontos. Introduza um terceiro dado.',
+                    '<strong>Visual:</strong> Tenha uma linha numérica pequena (1 a 12) para ajudar na contagem da soma.'
+                ],
+                science_snippet: 'Jogos com dados são excelentes para desenvolver o senso numérico e a habilidade de contagem rápida (subitizing para pequenas quantidades).[13] A adição se torna uma ação necessária e motivadora dentro do contexto do jogo.[33]'
+            },
+            {
+                id: 'mat41', name: 'Lanche Coletivo: Dividindo Igualmente', area: 'matematica', category: 'Resolvendo Pequenos Desafios',
+                objective: 'Introduzir a noção de divisão como partilha justa e equitativa, utilizando situações concretas e contagem.',
+                materials: ['Itens de lanche que possam ser divididos (ex: biscoitos, uvas, pequenos pedaços de fruta).', 'Pratinhos ou guardanapos (um para cada participante, incluindo a criança e o adulto).', 'Bonecos ou outros brinquedos para representar "amigos" que participarão do lanche (opcional).'],
+                steps: [
+                    'Prepare o cenário do lanche. Diga: "Vamos preparar um lanche para nós (e para os nossos amigos bonecos, se usar)". Conte quantos "participantes" haverá (ex: criança + adulto = 2; ou criança + adulto + 2 bonecos = 4).',
+                    'Pegue uma quantidade de itens de lanche (ex: 6 biscoitos). Conte-os junto com a criança: "Temos <strong>SEIS</strong> biscoitos".',
+                    'Diga: "Precisamos dividir os biscoitos igualmente para que cada um receba a mesma quantidade. Vamos dar um biscoito para cada um até acabar?".',
+                    'Distribua um biscoito por vez para cada participante (ou pratinho), contando em voz alta e incentivando a criança a ajudar na distribuição.',
+                    'Ao final, verifique se todos receberam a mesma quantidade. Pergunte: "Quantos biscoitos cada um ganhou?". Conte os biscoitos em um dos pratinhos.',
+                    'Repita com diferentes quantidades de lanche e/ou número de participantes, sempre começando com situações onde a divisão seja exata.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com um número pequeno de participantes (ex: apenas a criança e o adulto) e uma quantidade de itens que seja o dobro do número de participantes (ex: 2 participantes, 4 biscoitos).',
+                    '<strong>Desafiar:</strong> Aumente o número de itens e/ou participantes. Introduza situações onde sobre um item (resto) e converse sobre o que fazer com ele (ex: "Sobrou um biscoito! O que podemos fazer?").',
+                    '<strong>Visual:</strong> Use pratinhos de cores diferentes para cada participante para facilitar a visualização da distribuição.',
+                    '<strong>Cotidiano:</strong> Aproveite situações reais de partilha no dia a dia (dividir brinquedos, fatias de bolo, etc.).'
+                ],
+                science_snippet: 'A noção de divisão como partilha justa é uma introdução intuitiva e concreta a este conceito matemático. Envolver a criança ativamente na distribuição e contagem em contextos significativos como um lanche promove a compreensão.[11, 14]'
+            },
+            {
+                id: 'mat42', name: 'Arrumando a Mesa para a Família', area: 'matematica', category: 'Resolvendo Pequenos Desafios',
+                objective: 'Desenvolver a correspondência um-a-um em um contexto funcional e prático.',
+                materials: ['Pratos, copos, talheres (garfos, facas – com cuidado, colheres).', 'Jogos americanos ou lugares marcados na mesa (opcional).'],
+                steps: [
+                    'Diga à criança que ela vai ajudar a arrumar a mesa para uma refeição (ex: almoço da família).',
+                    'Pergunte: "Quantas pessoas vão almoçar hoje?". Conte junto com ela os membros da família que estarão presentes.',
+                    'Comece com os pratos: "Precisamos de um prato para cada pessoa. Se somos [X] pessoas, quantos pratos vamos pegar?". Ajude-a a contar e pegar o número correto de pratos.',
+                    'Peça para ela colocar um prato em cada lugar da mesa.',
+                    'Repita o processo para os copos: "Agora os copos. Um copo para cada pessoa." Ajude-a a contar e distribuir.',
+                    'Faça o mesmo com os talheres (ex: "Um garfo para cada um", "Uma colher para cada um").',
+                    'Ao final, verifiquem juntos se cada lugar tem um prato, um copo e os talheres necessários.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece arrumando a mesa para apenas duas pessoas (a criança e o adulto). Foque em um tipo de item por vez (só pratos, depois só copos).',
+                    '<strong>Desafiar:</strong> Peça para ela arrumar a mesa para um número maior de pessoas (ex: incluindo avós ou visitas imaginárias). Peça para ela verificar se alguém ficou sem algum item.',
+                    '<strong>Organização:</strong> Se usar jogos americanos, eles servem como um guia visual para onde colocar cada item.',
+                    '<strong>Responsabilidade:</strong> Transforme essa atividade em uma tarefa regular da criança, promovendo autonomia e senso de contribuição.'
+                ],
+                science_snippet: 'A correspondência um-a-um é um princípio fundamental da contagem e da noção de número.[11, 13] Aplicá-la em tarefas cotidianas como arrumar a mesa torna o aprendizado significativo e funcional, reforçando a ideia de que cada pessoa/lugar corresponde a um conjunto de itens.'
+            },
+            {
+                id: 'mat43', name: 'Minha Coleção de Carrinhos (Agrupamento)', area: 'matematica', category: 'Resolvendo Pequenos Desafios',
+                objective: 'Introduzir a noção de agrupamento por quantidade e os primórdios da multiplicação como soma de parcelas iguais.',
+                materials: ['Uma coleção de objetos pequenos e idênticos ou semelhantes (ex: carrinhos, blocos, botões, conchas) – pelo menos 10-15 itens.', 'Pequenos recipientes (potes, caixinhas) ou círculos desenhados em um papel para colocar os grupos.'],
+                steps: [
+                    'Espalhe a coleção de objetos sobre a mesa.',
+                    'Diga: "Vamos fazer grupos de carrinhos! Que tal fazermos grupos com <strong>DOIS</strong> carrinhos em cada um?".',
+                    'Pegue dois carrinhos e coloque-os juntos em um recipiente ou círculo desenhado. Diga: "Aqui está um grupo de dois".',
+                    'Peça para a criança continuar fazendo outros grupos de dois carrinhos até que todos os carrinhos (ou o máximo possível) estejam agrupados.',
+                    'Depois que todos os grupos estiverem formados, contem quantos grupos de dois foram feitos. "Olha! Conseguimos fazer [Y] grupos de dois carrinhos!".',
+                    'Conte o total de carrinhos contando os grupos: "Dois, quatro, seis..." (se a criança já tiver essa habilidade) ou contando todos os carrinhos um por um para confirmar o total.',
+                    'Repita a atividade fazendo grupos de outras quantidades (ex: grupos de 3, grupos de 4), dependendo da quantidade total de objetos.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com uma quantidade pequena de objetos no total (ex: 6 carrinhos) e faça grupos de 2. Use os recipientes para tornar os grupos bem visuais.',
+                    '<strong>Desafiar:</strong> Use uma quantidade maior de objetos. Depois de formar os grupos, pergunte: "Se temos [Y] grupos e cada grupo tem [X] carrinhos, quantos carrinhos temos no total?" (introduzindo a ideia de X vezes Y).',
+                    '<strong>Representação:</strong> Desenhe os grupos no papel após formá-los com os objetos.',
+                    '<strong>Variedade:</strong> Use diferentes tipos de objetos para manter o interesse.'
+                ],
+                science_snippet: 'O agrupamento é um passo fundamental para a compreensão da multiplicação. Formar conjuntos com a mesma quantidade de elementos e depois contá-los (ou contar os grupos) introduz a ideia de somas repetidas (2+2+2 = 3 grupos de 2), que é a base da multiplicação.[32]'
+            },
+            {
+                id: 'mat44', name: 'Calendário da Rotina', area: 'matematica', category: 'Resolvendo Pequenos Desafios',
+                objective: 'Desenvolver a noção de tempo (dias da semana, sequência de atividades diárias) e a organização temporal.',
+                materials: ['Um calendário grande e visível (pode ser comprado ou feito em cartolina).', 'Figuras ou símbolos que representem atividades importantes da rotina da criança (ex: tomar café, ir à escola, brincar, tomar banho, almoçar, jantar, dormir).', 'Velcro adesivo ou fita dupla-face para fixar as figuras no calendário.'],
+                steps: [
+                    'Apresente o calendário para a criança. Mostre os dias da semana. Se possível, cante uma música sobre os dias da semana.',
+                    'No início de cada dia (ou na noite anterior), converse com a criança sobre as principais atividades que acontecerão naquele dia.',
+                    'Pegue as figuras correspondentes às atividades e, junto com a criança, coloque-as no espaço do dia atual no calendário, na ordem em que acontecerão.',
+                    'Ex: "Hoje é segunda-feira. Primeiro vamos tomar café (coloque a figura do café). Depois, você vai para a escola (coloque a figura da escola). Depois do almoço, vamos brincar no parque (figura do parque)..."',
+                    'Ao longo do dia, consulte o calendário com a criança: "O que vem agora na nossa rotina?".',
+                    'Ao final do dia, retire as figuras e comente sobre o que foi feito. Marque o dia como "concluído" (com um X ou um adesivo).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com poucas atividades principais no calendário (3-4 por dia). Foque apenas no "hoje".',
+                    '<strong>Desafiar:</strong> Introduza noções de "ontem" e "amanhã". Converse sobre eventos especiais que acontecerão na semana (aniversários, passeios) e marque-os no calendário.',
+                    '<strong>Personalização:</strong> Use fotos da própria criança realizando as atividades para criar as figuras.',
+                    '<strong>Consistência:</strong> Use o calendário da rotina todos os dias para que ele se torne uma ferramenta familiar e útil.'
+                ],
+                science_snippet: 'O uso de um calendário visual ajuda crianças com síndrome de Down a compreender a passagem do tempo e a sequência de eventos, o que pode reduzir a ansiedade e aumentar a previsibilidade.[11] Esta atividade trabalha a organização temporal e a antecipação.'
+            },
+            {
+                id: 'mat45', name: 'Fazendo Compras no Mercadinho', area: 'matematica', category: 'Resolvendo Pequenos Desafios',
+                objective: 'Desenvolver o reconhecimento de preços simples, a contagem de moedas (poucas e de baixo valor) e a noção de troca em um contexto de brincadeira de faz de conta.',
+                materials: ['Embalagens vazias de produtos (caixas de cereal, potes de iogurte, latas limpas, etc.) para serem os "produtos" do mercadinho.', 'Etiquetas de preço simples (ex: R$1, R$2, R$5 – use apenas números inteiros e baixos inicialmente) para colar nos produtos.', 'Moedas de brinquedo (ou moedas reais de baixo valor, como 1 real, sob supervisão).', 'Uma "caixa registradora" de brinquedo ou uma caixinha para guardar o dinheiro.', 'Uma sacola de compras.'],
+                steps: [
+                    'Montem o "mercadinho" juntos, organizando os produtos e colocando os preços.',
+                    'Um participante será o "vendedor" e o outro o "cliente". Alternem os papéis.',
+                    'O cliente escolhe um produto. Diga: "Eu quero comprar este cereal. Quanto custa?".',
+                    'O vendedor (ou o adulto ajudando) lê o preço: "Custa R$2".',
+                    'O cliente deve pegar a quantidade correta de moedas para pagar. (Ex: Se custa R$2, pegar duas moedas de R$1). Ajude na contagem das moedas.',
+                    'O vendedor recebe o dinheiro, coloca na caixa registradora, e entrega o produto para o cliente colocar na sacola.',
+                    'Repitam com outros produtos e diferentes preços.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com preços de apenas R$1. O cliente só precisa dar uma moeda de R$1. Foque na troca: dar o dinheiro e receber o produto.',
+                    '<strong>Desafiar:</strong> Use preços que exijam mais de uma moeda (R$2, R$3). Introduza a ideia de troco simples (ex: produto custa R$1, cliente paga com R$2, vendedor devolve R$1).',
+                    '<strong>Lista de Compras:</strong> O cliente pode ter uma lista de compras (com figuras e/ou palavras) para seguir.',
+                    '<strong>Realismo:</strong> Se possível, use moedas reais para que a criança se familiarize com elas, sempre com supervisão.'
+                ],
+                science_snippet: 'Brincadeiras de faz de conta como o "mercadinho" são excelentes para aplicar conceitos matemáticos em situações que imitam a vida real, tornando o aprendizado mais significativo e funcional.[12, 14] Esta atividade envolve reconhecimento de números (preços), contagem (moedas) e a compreensão básica de transações financeiras.'
+            },
+            {
+                id: 'mat46', name: 'Caça às Formas na Natureza', area: 'matematica', category: 'Explorando Formas, Espaço, Medidas e Dinheiro',
+                objective: 'Identificar formas geométricas básicas (círculo, quadrado, retângulo, triângulo) em objetos e elementos do ambiente natural ou construído.',
+                materials: ['Nenhum material específico, além do ambiente ao redor (parque, jardim, rua, dentro de casa).', 'Opcional: uma prancheta com papel e lápis para desenhar as formas encontradas, ou uma câmera para fotografá-las.'],
+                steps: [
+                    'Antes de sair para a "caça" (ou durante um passeio), revise as formas geométricas básicas com a criança (círculo, quadrado, retângulo, triângulo). Mostre figuras ou objetos com essas formas.',
+                    'Explique que vocês vão procurar por essas formas escondidas nas coisas ao redor.',
+                    'Comece a procurar. Exemplo: "Olha aquela janela! Que forma ela tem? Parece um <strong>quadrado</strong> (ou retângulo)!".',
+                    'Incentive a criança a apontar para objetos e tentar nomear a forma que eles lembram.',
+                    '  - "O sol (ou a lua cheia) parece um <strong>círculo</strong>."',
+                    '  - "A placa de trânsito de PARE tem muitos lados, mas algumas placas são <strong>triangulares</strong> ou <strong>retangulares</strong>."',
+                    '  - "O telhado daquela casa parece um <strong>triângulo</strong>."',
+                    '  - "As rodas do carro são <strong>círculos</strong>."',
+                    'Valide as descobertas da criança. Se ela apontar algo e não souber o nome da forma, ajude-a.',
+                    'Se estiverem usando papel, podem desenhar as formas encontradas. Se tiverem câmera, fotografem.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Foque em uma ou duas formas por vez (ex: apenas círculos). Comece dentro de casa, onde os objetos são mais familiares e as formas podem ser mais evidentes (ex: prato = círculo, livro = retângulo).',
+                    '<strong>Desafiar:</strong> Procure por formas mais complexas ou combinações de formas. Peça para a criança descrever as características da forma (ex: "O quadrado tem quatro lados iguais").',
+                    '<strong>Jogo:</strong> "Quem acha mais círculos?".',
+                    '<strong>Arte:</strong> Depois da caça, façam uma colagem ou desenho usando as formas que encontraram na natureza.'
+                ],
+                science_snippet: 'Identificar formas geométricas no ambiente ajuda a criança a conectar conceitos abstratos da geometria com o mundo real, tornando o aprendizado mais concreto e relevante.[11, 30] Esta atividade desenvolve a observação, a percepção visual-espacial e o vocabulário geométrico.'
+            },
+            {
+                id: 'mat47', name: 'Medindo com Barbante', area: 'matematica', category: 'Explorando Formas, Espaço, Medidas e Dinheiro',
+                objective: 'Introduzir a noção de comprimento e a comparação de tamanhos (mais comprido/mais curto) utilizando uma unidade de medida não padronizada (barbante).',
+                materials: ['Barbante ou lã.', 'Tesoura (para uso do adulto).', 'Diversos objetos do ambiente para medir (ex: mesa, cadeira, livro, brinquedo, a altura da criança).'],
+                steps: [
+                    'Escolha um objeto para medir (ex: a largura da mesa).',
+                    'Pegue o barbante e estique-o ao longo da largura da mesa. Corte o barbante exatamente nesse comprimento. Mostre para a criança: "Este barbante tem o tamanho da largura da nossa mesa!".',
+                    'Agora, escolham outro objeto (ex: um livro). Use o mesmo pedaço de barbante (que representa a largura da mesa) para comparar. "Será que o livro é mais comprido ou mais curto que a largura da mesa?". Coloque o barbante ao lado do livro.',
+                    'Se o livro for menor, diga: "O livro é <strong>mais curto</strong> que o barbante (e que a mesa)". Se fosse maior (improvável neste exemplo, mas para outros casos): "Este objeto é <strong>mais comprido</strong> que o barbante".',
+                    'Você também pode cortar um novo pedaço de barbante do tamanho do livro e comparar os dois pedaços de barbante: "Qual barbante é mais comprido? O da mesa ou o do livro?".',
+                    'Meçam outros objetos, sempre comparando os comprimentos usando os pedaços de barbante.'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Compare apenas dois objetos de cada vez. Use contrastes bem claros (um objeto visivelmente muito comprido e outro muito curto).',
+                    '<strong>Desafiar:</strong> Ordene três ou mais objetos do mais curto para o mais comprido, usando pedaços de barbante como referência. Meça a altura da criança com barbante e compare com a altura de um adulto ou de um móvel.',
+                    '<strong>Unidade Pessoal:</strong> Use partes do corpo como unidades de medida não padronizadas (palmos, pés), mas explique que os tamanhos variam de pessoa para pessoa.',
+                    '<strong>Registro:</strong> Cole os pedaços de barbante medidos em um papel, identificando o que cada um representa, para criar um "gráfico" de comprimentos.'
+                ],
+                science_snippet: 'A medição com unidades não padronizadas, como o barbante, é um primeiro passo importante para a compreensão do conceito de comprimento e das comparações.[11] Permite que a criança foque na ideia de "quanto espaço algo ocupa" de forma linear, antes de se preocupar com números e unidades formais (como centímetros ou metros).'
+            },
+            {
+                id: 'mat48', name: 'Pesado ou Leve?', area: 'matematica', category: 'Explorando Formas, Espaço, Medidas e Dinheiro',
+                objective: 'Desenvolver a noção intuitiva de peso através da comparação direta de objetos (qual é mais pesado/mais leve).',
+                materials: ['Pares de objetos com pesos visivelmente diferentes, mas que possam ser segurados pela criança (ex: uma pedra e uma pluma; um livro grosso e uma folha de papel; um carrinho de metal e um carrinho de plástico; uma laranja e uma uva).', 'Opcional: uma balança de pratos simples de brinquedo.'],
+                steps: [
+                    'Escolha um par de objetos (ex: o livro grosso e a folha de papel).',
+                    'Peça para a criança segurar um objeto em cada mão. "Qual você acha que é <strong>mais pesado</strong>? Qual é <strong>mais leve</strong>?".',
+                    'Incentive-a a sentir a diferença de peso. Converse sobre a sensação: "Este (o livro) faz sua mão descer mais, né? Ele é mais pesado."',
+                    'Repita com outros pares de objetos.',
+                    'Se tiver uma balança de pratos, coloque um objeto em cada prato e observe qual lado desce mais. "Olha, o lado com [o objeto mais pesado] desceu! Isso quer dizer que ele é mais pesado."',
+                    'Tente encontrar objetos que tenham o mesmo peso (ou pesos muito parecidos) para introduzir a ideia de "pesos iguais".'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Use objetos com diferenças de peso muito grandes e óbvias. Foque apenas em "pesado" e "leve", sem pedir para a criança adivinhar qual é qual inicialmente, apenas para sentir a diferença que você aponta.',
+                    '<strong>Desafiar:</strong> Peça para a criança ordenar três objetos do mais leve para o mais pesado, usando as mãos para comparar dois a dois. Use objetos que pareçam ter o mesmo tamanho, mas pesos diferentes (ex: uma bola de isopor e uma bola de borracha do mesmo tamanho).',
+                    '<strong>Cuidado:</strong> Use objetos que sejam seguros para a criança manusear e que não sejam pesados demais a ponto de ela os derrubar.',
+                    '<strong>Vocabulário:</strong> Introduza sinônimos como "pesadão" e "levinho".'
+                ],
+                science_snippet: 'A compreensão inicial de peso vem da experiência sensorial e da comparação direta.[13, 30] Permitir que a criança sinta o peso dos objetos com as próprias mãos, ou veja o efeito em uma balança simples, ajuda a construir essa noção fundamental antes de introduzir unidades de medida de massa (como quilos ou gramas).'
+            },
+            {
+                id: 'mat49', name: 'Cofrinho das Moedas', area: 'matematica', category: 'Explorando Formas, Espaço, Medidas e Dinheiro',
+                objective: 'Promover o reconhecimento de alguns tipos de moedas (ex: R$1, R$0,50, R$0,25 – dependendo do que é familiar) e praticar a contagem de pequenas quantidades de dinheiro.',
+                materials: ['Um cofrinho com uma abertura adequada para moedas.', 'Moedas reais de diferentes valores (comece com poucas variações, ex: apenas moedas de R$1 e R$0,50).', 'Opcional: cartões com o desenho e o valor de cada moeda para pareamento.'],
+                steps: [
+                    'Mostre as moedas para a criança. Pegue uma moeda de R$1, por exemplo. Diga: "Esta é uma moeda de <strong>UM REAL</strong>". Deixe a criança examiná-la (tamanho, cor, desenhos).',
+                    'Faça o mesmo com outro tipo de moeda (ex: R$0,50 – "Esta é uma moeda de <strong>CINQUENTA CENTAVOS</strong>"). Compare as duas: "Elas são iguais ou diferentes?".',
+                    'Dê algumas moedas para a criança (ex: três moedas de R$1). Peça para ela colocar as moedas no cofrinho, uma por vez, contando: "Uma... duas... três moedas!".',
+                    'Periodicamente, abram o cofrinho juntos (se ele permitir abertura fácil, ou em ocasiões especiais). Contem quantas moedas de cada tipo foram guardadas.',
+                    'Podem usar o dinheiro "guardado" para comprar algo simbólico em uma brincadeira de mercadinho, ou definir uma meta para comprar algo pequeno e real (com a ajuda do adulto para completar o valor, se necessário).'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Comece com apenas um tipo de moeda (ex: todas de R$1). Foque na ação de colocar no cofrinho e contar quantas foram colocadas naquela vez.',
+                    '<strong>Desafiar:</strong> Introduza mais tipos de moedas. Faça um jogo de classificação: "Vamos separar todas as moedas de UM REAL aqui e todas as de CINQUENTA CENTAVOS ali?". Tente somar valores pequenos (ex: "Uma moeda de R$1 mais outra de R$1 são R$2").',
+                    '<strong>Pareamento:</strong> Use cartões com o desenho da moeda e seu valor escrito. Peça para a criança colocar a moeda real sobre o cartão correspondente.',
+                    '<strong>Segurança:</strong> Sempre supervisione o manuseio de moedas reais, especialmente com crianças menores, devido ao risco de engolir.'
+                ],
+                science_snippet: 'O reconhecimento e a contagem de dinheiro são habilidades matemáticas funcionais importantes para a vida diária.[11] Começar com moedas reais e familiares, em um contexto lúdico como o cofrinho, ajuda a criança a desenvolver familiaridade com o sistema monetário.'
+            },
+            {
+                id: 'mat50', name: 'Relógio de Sol Caseiro', area: 'matematica', category: 'Explorando Formas, Espaço, Medidas e Dinheiro',
+                objective: 'Introduzir a noção de passagem do tempo (manhã, tarde) através da observação da sombra e sua relação com a posição do sol.',
+                materials: ['Um prato de papel ou um círculo de cartolina resistente.', 'Um lápis ou palito de churrasco (sem ponta).', 'Massinha de modelar ou fita adesiva para fixar o lápis/palito.', 'Giz (se for fazer ao ar livre em piso adequado) ou pedras pequenas para marcar a sombra.', 'Um local ensolarado ao ar livre.'],
+                steps: [
+                    'Em um dia de sol, encontre um local plano e aberto onde o sol bata durante boa parte do dia.',
+                    'Fixe o lápis/palito (chamado gnômon) em pé no centro do prato de papel/círculo de cartolina usando massinha ou fita adesiva. O lápis deve ficar o mais vertical possível.',
+                    'Coloque o "relógio" no chão ensolarado. Observe a sombra que o lápis faz no prato.',
+                    'Em um horário específico da manhã (ex: 9h), marque a ponta da sombra no prato com uma caneta ou coloque uma pedrinha/marca de giz no chão na ponta da sombra. Escreva o horário ao lado da marca.',
+                    'Volte ao local em outros horários (ex: meio-dia, 15h). Peça para a criança observar como a sombra mudou de lugar e de tamanho. Marque a nova posição da sombra e o horário.',
+                    'Converse com a criança: "De manhã, a sombra estava aqui. Agora, mais tarde, ela está aqui! A sombra se moveu porque o sol parece se mover no céu."',
+                    'Relacione com os períodos do dia: "Quando a sombra está curta (perto do meio-dia), é a parte mais quente do dia. Quando ela fica comprida de novo do outro lado, está ficando tarde."'
+                ],
+                tips: [
+                    '<strong>Simplificar:</strong> Faça apenas duas marcações: uma de manhã e uma à tarde. Foque na observação de que a sombra mudou de lugar.',
+                    '<strong>Desafiar:</strong> Faça marcações a cada hora durante um período. Compare o relógio de sol com um relógio normal. Converse sobre por que a sombra muda (movimento aparente do sol devido à rotação da Terra – de forma simplificada).',
+                    '<strong>Consistência:</strong> Se possível, deixe o relógio de sol no mesmo lugar por alguns dias e observe as sombras nos mesmos horários para ver a repetição do padrão.',
+                    '<strong>Segurança Solar:</strong> Lembre-se de não olhar diretamente para o sol e de usar protetor solar se passarem muito tempo ao ar livre.'
+                ],
+                science_snippet: 'O relógio de sol é um dos instrumentos mais antigos para medir a passagem do tempo e demonstra de forma concreta a relação entre o sol e as sombras.[11] Esta atividade promove a observação científica, a noção de tempo e a compreensão de fenômenos naturais simples.'
+            }
+        ];
+
+
+        const introContent = `
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-[#81B29A] mb-4">Introdução</h2>
+                <p class="mb-3">Bem-vindos a uma jornada de descobertas e desenvolvimento! Este e-book foi cuidadosamente elaborado para oferecer a pais, educadores e terapeutas um conjunto de atividades cognitivas, fundamentadas em pesquisas científicas, destinadas a apoiar o florescimento das habilidades de linguagem e matemática em crianças com síndrome de Down. Cada criança é um universo de potencialidades, e nosso objetivo é fornecer ferramentas práticas e amorosas para nutrir esse potencial.</p>
+                
+                <h3 class="text-xl font-semibold text-[#81B29A] mt-6 mb-3">Uma Breve Palavra sobre a Síndrome de Down e o Desenvolvimento Cognitivo</h3>
+                <p class="mb-3">A síndrome de Down (SD), também conhecida como trissomia do cromossomo 21, é uma condição genética [1], e não uma doença. É fundamental compreender que cada criança com síndrome de Down é, antes de tudo, um indivíduo único, com sua própria personalidade, talentos e ritmo de desenvolvimento.[1, 2] Embora existam algumas características comuns no perfil de desenvolvimento, a variabilidade individual é imensa.</p>
+                <p class="mb-3">Do ponto de vista neuropsicológico, crianças com síndrome de Down frequentemente apresentam um perfil cognitivo com pontos fortes e desafios específicos. A deficiência intelectual é uma característica presente, mas seu grau varia consideravelmente entre os indivíduos.[2, 3] Entre os pontos fortes relativos, destacam-se o processamento visual e a memória visuoespacial.[2, 4, 5] Isso significa que muitas crianças com SD aprendem e retêm informações de forma mais eficaz quando apresentadas visualmente.</p>
+                <p class="mb-3">Por outro lado, algumas áreas podem apresentar desafios mais comuns, como a memória de trabalho verbal (a capacidade de manter e manipular informações verbais por um curto período), as funções executivas (habilidades como planejamento, organização, flexibilidade de pensamento e controle inibitório) e a velocidade de processamento da informação.[2, 4, 6]</p>
+                <p class="mb-3">É importante notar que, embora um padrão frequente aponte para habilidades não verbais (visuais, espaciais) como sendo relativamente mais fortes que as habilidades verbais [2, 6], a pesquisa científica demonstra uma diversidade de perfis cognitivos. Alguns estudos identificaram subgrupos de crianças com síndrome de Down que apresentam, por exemplo, uma inteligência verbal superior à não verbal.[7] Essa constatação não contradiz o perfil mais comum, mas o complexifica, reforçando a ideia de que não se pode generalizar. A implicação direta dessa variabilidade é a necessidade crucial de uma observação atenta e individualizada da criança. Embora o apoio visual seja uma estratégia poderosa e amplamente recomendada, não se deve presumir que o canal verbal seja sempre a maior fraqueza para *todas* as crianças com SD. Algumas podem, inclusive, beneficiar-se de abordagens que também valorizem e explorem suas capacidades verbais.</p>
+                <p class="mb-3">Portanto, a estimulação cognitiva deve ser sempre personalizada, buscando identificar e aproveitar os pontos fortes de cada criança, ao mesmo tempo em que oferece suporte específico e direcionado para as áreas que representam maiores desafios.</p>
+
+                <h3 class="text-xl font-semibold text-[#81B29A] mt-6 mb-3">A Importância da Estimulação Cognitiva para a Linguagem e Matemática</h3>
+                <p class="mb-3">A estimulação cognitiva precoce e contínua desempenha um papel transformador no desenvolvimento de crianças com síndrome de Down.[3, 5, 8, 9, 10, 11] Quanto mais cedo e de forma mais consistente a criança recebe estímulos adequados e enriquecedores, maiores são as chances de otimizar seu desenvolvimento global.</p>
+                <p class="mb-3">É crucial entender que o desenvolvimento motor e o desenvolvimento cognitivo estão intrinsecamente ligados.[3] Atrasos no desenvolvimento motor, comuns em crianças com SD, podem restringir a capacidade da criança de explorar o ambiente, manipular objetos e interagir ativamente com o mundo ao seu redor. Essa exploração é uma fonte primária de aprendizado. Portanto, atividades que considerem e, quando possível, integrem o desenvolvimento motor podem ter um impacto positivo e mais amplo sobre as aquisições cognitivas. Facilitar a movimentação e a manipulação de objetos, por exemplo, abre portas para novas descobertas e aprendizados.</p>
+                <p class="mb-3">A estimulação direcionada para a linguagem e a matemática vai muito além do desenvolvimento de habilidades puramente acadêmicas. Essas competências são fundamentais para promover a autonomia, a capacidade de comunicação efetiva e a inclusão social da criança.[11, 12, 13, 14, 15] Aprender a comunicar suas necessidades e desejos, compreender instruções, participar de conversas, entender conceitos numéricos básicos e resolver problemas simples do dia a dia são habilidades que impactam diretamente a qualidade de vida e a independência.</p>
+                <p class="mb-3">Nesse sentido, a estimulação cognitiva, especialmente quando integrada de forma natural e funcional ao cotidiano da criança e às suas interações sociais [10, 11, 14, 15], transcende o simples "ensinar tarefas". Trata-se de construir os alicerces para uma participação social mais plena, para o desenvolvimento da autoestima e da identidade da criança. Ao aprender e aplicar conhecimentos de linguagem e matemática em contextos reais e significativos, a criança não apenas adquire habilidades, mas também desenvolve um senso de competência e pertencimento.</p>
+
+                <h3 class="text-xl font-semibold text-[#81B29A] mt-6 mb-3">Como Utilizar este E-book: Dicas para Pais e Educadores</h3>
+                <p class="mb-3">Este e-book foi concebido como um guia prático, repleto de ideias para estimular o desenvolvimento cognitivo de crianças com síndrome de Down. Para aproveitar ao máximo as atividades propostas, sugerimos algumas diretrizes:</p>
+                <ul class="list-disc list-inside space-y-2 mb-3 pl-4">
+                    <li><strong>Abordagem Lúdica e Prazerosa:</strong> O aprendizado mais eficaz acontece quando é divertido. Transforme as atividades em brincadeiras, utilize o humor e celebre cada pequeno progresso. O brincar é uma linguagem universal da infância e um poderoso motor para o desenvolvimento.[11, 12, 13, 15, 16]</li>
+                    <li><strong>Paciência, Repetição e Consistência:</strong> Cada criança tem seu próprio tempo. A repetição é uma aliada importante na consolidação do aprendizado para crianças com síndrome de Down.[11, 13, 17] Seja consistente na aplicação das atividades, integrando-as à rotina sempre que possível.</li>
+                    <li><strong>Adaptação Individualizada:</strong> As atividades aqui apresentadas são sugestões. Sinta-se à vontade para adaptá-las às necessidades, interesses e ao nível de desenvolvimento específico da sua criança.[2, 5, 12, 13, 14, 18, 19] O que funciona para uma criança pode precisar de ajustes para outra.</li>
+                    <li><strong>Observação Atenta:</strong> Observe atentamente como a criança responde a cada atividade. Suas reações, dificuldades e sucessos são pistas valiosas para guiar os próximos passos e ajustar as estratégias.</li>
+                    <li><strong>Colaboração em Rede:</strong> A jornada de desenvolvimento da criança com síndrome de Down é enriquecida pela colaboração entre família, escola e terapeutas.[1, 5, 11, 14, 15, 19, 20, 21] Compartilhe informações, estratégias e progressos.</li>
+                    <li><strong>Cultivando a "Prontidão para Aprender":</strong> A "prontidão" para aprender não é um estado fixo, mas algo que pode ser ativamente cultivado. O conceito de Zona de Desenvolvimento Proximal (ZDP), proposto por Vygotsky e mencionado como base para oficinas de linguagem [16], é particularmente relevante aqui. A ZDP refere-se à distância entre o que a criança consegue fazer sozinha e o que ela consegue fazer com o apoio de um adulto ou colega mais experiente. As atividades deste e-book não devem ser vistas apenas como um teste das habilidades que a criança já possui, mas como ferramentas para construir novas habilidades com o seu apoio. O adulto (pai, mãe, educador ou terapeuta) atua como um mediador, oferecendo o suporte necessário para que a criança alcance um novo patamar de desenvolvimento. Essa perspectiva transforma a abordagem de "a criança não consegue fazer isto" para "como posso apoiar a criança para que ela consiga fazer isto?".</li>
+                </ul>
+                <p>Lembre-se: o objetivo principal é promover o desenvolvimento de forma integral, respeitando a individualidade e celebrando cada conquista.</p>
+            </div>
+        `;
+        
+        const introSection = document.getElementById('intro-section');
+        const linguagemSection = document.getElementById('linguagem-section');
+        const matematicaSection = document.getElementById('matematica-section');
+        const searchResultsSection = document.getElementById('search-results-section');
+        const searchResultsContent = document.getElementById('search-results-content');
+        const activityDetailView = document.getElementById('activity-detail-view');
+        
+        const navIntro = document.getElementById('nav-intro');
+        const navLinguagem = document.getElementById('nav-linguagem');
+        const navMatematica = document.getElementById('nav-matematica');
+        const searchInput = document.getElementById('search-input');
+
+        const contentSections = document.querySelectorAll('.content-section');
+        const navButtons = document.querySelectorAll('.nav-button');
+
+        function setActiveNav(activeButton) {
+            navButtons.forEach(button => button.classList.remove('active'));
+            if (activeButton) {
+                activeButton.classList.add('active');
+            }
+        }
+
+        function showSection(sectionId, activeNavButton) {
+            contentSections.forEach(section => section.classList.add('hidden'));
+            activityDetailView.classList.add('hidden'); // Hide detail view when changing sections
+            document.getElementById(sectionId).classList.remove('hidden');
+            setActiveNav(activeNavButton);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function displayActivityDetail(activityId) {
+            const activity = allActivities.find(act => act.id === activityId);
+            if (!activity) return;
+
+            let materialsHTML = activity.materials.map(item => `<li class="activity-material-item text-sm">${item}</li>`).join('');
+            let stepsHTML = activity.steps.map(step => `<li class="activity-step mb-1">${step}</li>`).join('');
+            let tipsHTML = activity.tips.map(tip => `<li class="activity-tip mb-1">${tip}</li>`).join('');
+
+            activityDetailView.innerHTML = `
+                <button id="back-to-list" class="mb-4 text-sm bg-[#F2CC8F] hover:bg-[#E07A5F] text-[#3D405B] hover:text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300">↩ Voltar para Lista</button>
+                <h3 class="text-2xl font-bold text-[#81B29A] mb-3">${activity.name}</h3>
+                <p class="text-xs uppercase font-semibold text-gray-500 mb-3">${activity.area === 'linguagem' ? '🗣️ Linguagem' : '🧮 Matemática'} - ${activity.category}</p>
+                
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-[#3D405B] mb-1">🎯 Objetivo:</h4>
+                    <p class="text-sm">${activity.objective}</p>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-[#3D405B] mb-1">🛠️ Materiais Necessários:</h4>
+                    <ul class="list-disc list-inside pl-4 space-y-1">${materialsHTML}</ul>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-[#3D405B] mb-1">👣 Passo a Passo:</h4>
+                    <ol class="list-decimal list-inside pl-4 space-y-1">${stepsHTML}</ol>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-[#3D405B] mb-1">💡 Dicas Extras e Adaptações:</h4>
+                    <ul class="list-disc list-inside pl-4 space-y-1">${tipsHTML}</ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-[#3D405B] mb-1">🔬 Pílula de Ciência:</h4>
+                    <p class="text-sm italic">${activity.science_snippet}</p>
+                </div>
+            `;
+            activityDetailView.classList.remove('hidden');
+            contentSections.forEach(section => section.classList.add('hidden')); // Hide main list sections
+            searchResultsSection.classList.add('hidden'); // Hide search results if they were open
+
+            document.getElementById('back-to-list').addEventListener('click', () => {
+                activityDetailView.classList.add('hidden');
+                // Re-show the previously active section or default to intro
+                const lastActiveNav = Array.from(navButtons).find(btn => btn.classList.contains('active'));
+                if (lastActiveNav) {
+                    if (lastActiveNav.id === 'nav-intro') showSection('intro-section', navIntro);
+                    else if (lastActiveNav.id === 'nav-linguagem') showSection('linguagem-section', navLinguagem);
+                    else if (lastActiveNav.id === 'nav-matematica') showSection('matematica-section', navMatematica);
+                } else {
+                     // If coming from search, search results might need special handling or just go to intro
+                    if (searchInput.value.trim() !== "") {
+                        performSearch(searchInput.value.trim()); // Re-run search to show the list
+                    } else {
+                        showSection('intro-section', navIntro);
+                    }
+                }
+                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            window.scrollTo({ top: activityDetailView.offsetTop - 80, behavior: 'smooth' }); // Scroll to detail view, considering sticky nav
+        }
+        
+        function renderActivities(area) {
+            const section = area === 'linguagem' ? linguagemSection : matematicaSection;
+            const activities = allActivities.filter(act => act.area === area);
+            const categories = [...new Set(activities.map(act => act.category))];
+
+            section.innerHTML = `<h2 class="text-3xl font-bold text-[#81B29A] mb-6 text-center">Atividades de ${area === 'linguagem' ? 'Linguagem 🗣️' : 'Matemática 🧮'}</h2>
+            <p class="text-center mb-8 text-lg">Explore ${activities.length} atividades cuidadosamente selecionadas para estimular o desenvolvimento cognitivo.</p>`;
+            
+            categories.forEach(category => {
+                const categoryActivities = activities.filter(act => act.category === category);
+                let activitiesHTML = categoryActivities.map(act => `
+                    <li class="mb-2">
+                        <button data-id="${act.id}" class="activity-name-btn text-left w-full p-3 rounded-md hover:bg-[#F2CC8F] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
+                           ✨ ${act.name}
+                        </button>
+                    </li>
+                `).join('');
+
+                section.innerHTML += `
+                    <div class="mb-8 p-3">
+                        <h3 class="text-xl font-semibold text-[#3D405B] mb-4 border-b-2 border-[#F2CC8F] pb-2">${category}</h3>
+                        <ul class="space-y-1">${activitiesHTML}</ul>
+                    </div>
+                `;
+            });
+
+            section.querySelectorAll('.activity-name-btn').forEach(button => {
+                button.addEventListener('click', () => displayActivityDetail(button.dataset.id));
+            });
+        }
+
+        function performSearch(query) {
+            const lowerCaseQuery = query.toLowerCase().trim();
+            if (!lowerCaseQuery) {
+                searchResultsContent.innerHTML = '<p class="text-gray-600">Digite algo para buscar.</p>';
+                showSection('search-results-section', null); // Pass null as no nav button corresponds to search results directly
+                setActiveNav(null); // No nav button is active during search display
+                return;
+            }
+
+            const filteredActivities = allActivities.filter(act => 
+                act.name.toLowerCase().includes(lowerCaseQuery) || 
+                act.objective.toLowerCase().includes(lowerCaseQuery) ||
+                act.category.toLowerCase().includes(lowerCaseQuery) ||
+                (act.science_snippet && act.science_snippet.toLowerCase().includes(lowerCaseQuery))
+            );
+
+            if (filteredActivities.length === 0) {
+                searchResultsContent.innerHTML = '<p class="text-gray-600">Nenhuma atividade encontrada para sua busca.</p>';
+            } else {
+                let resultsHTML = filteredActivities.map(act => `
+                    <div class="activity-card p-4 rounded-lg shadow-sm mb-3">
+                        <h4 class="text-lg font-semibold text-[#81B29A]">${act.name}</h4>
+                        <p class="text-xs uppercase font-semibold text-gray-500 mb-1">${act.area === 'linguagem' ? '🗣️ Linguagem' : '🧮 Matemática'} - ${act.category}</p>
+                        <p class="text-sm text-gray-700 mb-2">${act.objective.substring(0, 100)}...</p>
+                        <button data-id="${act.id}" class="activity-name-btn text-sm bg-[#F2CC8F] hover:bg-[#E07A5F] text-[#3D405B] hover:text-white font-semibold py-1.5 px-3 rounded-md transition-colors duration-300">Ver Detalhes</button>
+                    </div>
+                `).join('');
+                searchResultsContent.innerHTML = resultsHTML;
+                searchResultsContent.querySelectorAll('.activity-name-btn').forEach(button => {
+                     button.addEventListener('click', () => displayActivityDetail(button.dataset.id));
+                });
+            }
+            showSection('search-results-section', null);
+            setActiveNav(null);
+        }
+
+        navIntro.addEventListener('click', () => showSection('intro-section', navIntro));
+        navLinguagem.addEventListener('click', () => showSection('linguagem-section', navLinguagem));
+        navMatematica.addEventListener('click', () => showSection('matematica-section', navMatematica));
+        
+        searchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+        
+        // Initial load
+        introSection.innerHTML = introContent;
+        renderActivities('linguagem');
+        renderActivities('matematica');
+        showSection('intro-section', navIntro); // Show intro by default
+
+    </script>
+</body>
+</html>
